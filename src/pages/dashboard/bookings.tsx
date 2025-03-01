@@ -104,7 +104,7 @@ const Booking = () => {
 
               {/* Flight Details */}
               {booking.transport === "flight" && (
-                <div className="mt-3 grid grid-cols-3 text-sm text-gray-700 p-4">
+                <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-3 text-sm text-gray-700 p-4">
                   <div>
                     <p className="text-gray-500">Departure time</p>
                     <p className="font-semibold">{booking.departure}</p>
@@ -122,7 +122,7 @@ const Booking = () => {
 
               {/* Car Details */}
               {booking.transport === "car" && (
-                <div className="mt-3 grid grid-cols-3 text-sm text-gray-700 p-4">
+                <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-3 text-sm text-gray-700 p-4">
                   <div>
                     <p className="text-gray-500">Pickup address</p>
                     <p className="font-semibold">{booking.pickup}</p>
