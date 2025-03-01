@@ -1,0 +1,105 @@
+import { useState, useEffect, useRef } from "react";
+import { FiChevronDown } from "react-icons/fi";
+
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  options: Option[];
+  placeholder?: string;
+  bg?: string;
+}
+
+const Select: React.FC<Props> = ({ options, placeholder = "Select", bg }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState<Option | null>(null);
+  const [position, setPosition] = useState<"bottom" | "top">("bottom");
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Toggle dropdown state
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Adjust dropdown position based on available space
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      setPosition(spaceBelow < 200 ? "top" : "bottom");
+    }
+  }, [isOpen]);
+
+  const handleSelect = (option: Option) => {
+    setSelected(option);
+    setIsOpen(false); // Close after selection
+  };
+
+  return (
+    <div
+      className="relative w-full text-black text-opacity-70 "
+      ref={dropdownRef}
+    >
+      {/* Dropdown Button */}
+      <button
+        onClick={toggleDropdown}
+        className={`flex justify-between items-center gap-3 px-4 py-2 w-full  ${
+          isOpen ? "border border-primary rounded-t-lg" : "rounded-lg"
+        } ${bg || "bg-gray-100"}`}
+      >
+        <span className="whitespace-nowrap font-medium text-lg text-gray-400">
+          {selected ? selected.label : placeholder}
+        </span>
+        <FiChevronDown
+          className={`w-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div
+          className={`absolute w-full rounded-b-lg bg-white  z-50 ${
+            position === "top" ? "bottom-full " : "top-full"
+          } ${isOpen ? "border-x border-b border-primary" : ""}`}
+        >
+          {/* Options List */}
+          <div className="max-h-60 overflow-y-auto">
+            {options.length > 0 ? (
+              options.map((option) => (
+                <div
+                  key={option.value}
+                  className="flex items-center space-x-3 p-3 hover:bg-primary/20 cursor-pointer"
+                  onClick={() => handleSelect(option)}
+                >
+                  <span className="">{option.label}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-400 p-3">
+                No options available
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Select;
