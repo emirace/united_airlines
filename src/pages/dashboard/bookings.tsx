@@ -56,7 +56,7 @@ const Booking = () => {
   const filteredBookings = bookingsData.filter((b) => b.type === activeTab);
 
   return (
-    <div className="w-full overflow-x-hidden border rounded-xl p-6">
+    <div className=" border rounded-xl p-6 min-h-[80vh]">
       <h2 className="text-4xl font-bold">My Bookings</h2>
 
       {/* Tabs */}
@@ -97,7 +97,7 @@ const Booking = () => {
                     </p>
                   </div>
                 </div>
-                <button className="ml-auto px-4 py-2 text-primary bg-primary/10 rounded-md">
+                <button className="md:ml-auto px-4 py-2 text-primary bg-primary/10 rounded-md">
                   Manage Booking
                 </button>
               </div>

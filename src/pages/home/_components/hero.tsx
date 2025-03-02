@@ -7,7 +7,7 @@ const Hero = () => {
       <img
         src={IMAGES.hero}
         alt="hero"
-        className="absolute inset-0 object-cover"
+        className="absolute inset-0 h-full w-full object-cover"
       />
       <h1 className="relative text-5xl md:text-8xl font-extrabold mb-4 md:mb-12">
         Ready to take off?

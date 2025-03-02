@@ -8,11 +8,19 @@ interface Option {
 
 interface Props {
   options: Option[];
+  onChange: (value: string) => void;
+  value: string;
   placeholder?: string;
   bg?: string;
 }
 
-const Select: React.FC<Props> = ({ options, placeholder = "Select", bg }) => {
+const Select: React.FC<Props> = ({
+  options,
+  placeholder = "Select",
+  bg,
+  onChange,
+  value,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<Option | null>(null);
   const [position, setPosition] = useState<"bottom" | "top">("bottom");
@@ -21,6 +29,13 @@ const Select: React.FC<Props> = ({ options, placeholder = "Select", bg }) => {
 
   // Toggle dropdown state
   const toggleDropdown = () => setIsOpen((prev) => !prev);
+
+  useEffect(() => {
+    if (value) {
+      const currentValue = options.find((option) => option.value === value);
+      setSelected(currentValue || null);
+    }
+  }, [value]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -48,6 +63,7 @@ const Select: React.FC<Props> = ({ options, placeholder = "Select", bg }) => {
 
   const handleSelect = (option: Option) => {
     setSelected(option);
+    onChange(option.value);
     setIsOpen(false); // Close after selection
   };
 
@@ -74,7 +90,7 @@ const Select: React.FC<Props> = ({ options, placeholder = "Select", bg }) => {
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className={`absolute w-full rounded-b-lg bg-white  z-50 ${
+          className={`absolute w-full rounded-b-lg bg-white  z-10 ${
             position === "top" ? "bottom-full " : "top-full"
           } ${isOpen ? "border-x border-b border-primary" : ""}`}
         >

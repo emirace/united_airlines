@@ -12,7 +12,7 @@ const sidebars = [
   { name: "Settings", icon: HiOutlineCog, path: "settings" },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ close }: { close: () => void }) => {
   return (
     <div className="w-72 bg-gray-100 rounded-xl p-6">
       {/* Profile Section */}
@@ -32,6 +32,7 @@ const Sidebar = () => {
       <ul className="mt-6 space-y-2">
         {sidebars.map((sidebar) => (
           <NavLink
+            onClick={close}
             to={sidebar.path}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 cursor-pointer hover:text-primary hover:bg-primary/10  ${

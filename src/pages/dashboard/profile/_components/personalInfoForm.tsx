@@ -1,25 +1,69 @@
 import { useState } from "react";
 import Select from "../../../home/_components/select";
+import { useUser } from "../../../../context/user";
+import { useToastNotification } from "../../../../context/toastNotification";
+import Loading from "../../../_components/loading";
 
 const PersonalInfoForm = () => {
+  const { user, updateUser } = useUser();
+  const { addNotification } = useToastNotification();
   const [formData, setFormData] = useState({
-    fullName: "Jacqueline Miller",
-    email: "hello@gmail.com",
-    mobile: "222 555 666",
-    nationality: "Paris",
-    dob: "1996-08-29",
-    gender: "male",
-    address: "2119 N Division Ave, New Hampshire, York, United States",
+    fullName: `${user?.firstName || ""} ${user?.lastName || ""}`,
+    email: user?.email || "",
+    mobile: user?.mobile || "",
+    nationality: user?.nationality || "",
+    dob: user?.dob || "",
+    gender: user?.gender || "",
+    address: user?.address || "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleUpdate = async () => {
+    if (!formData.fullName.trim() || !formData.email.trim()) {
+      addNotification({
+        message: "Name and email are required.",
+        error: true,
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const [firstName, ...lastNameArr] = formData.fullName.split(" ");
+      const lastName = lastNameArr.join(" ");
+
+      // Prepare data for update
+      const updateData: Record<string, any> = {
+        firstName: firstName || user?.firstName,
+        lastName: lastName || user?.lastName,
+        email: formData.email,
+        phone: formData.mobile,
+      };
+
+      // Send update to backend
+      await updateUser(updateData);
+
+      addNotification({ message: "Profile updated successfully!" });
+    } catch (error: any) {
+      addNotification({
+        message: error || "An error occurred while updating your profile.",
+        error: true,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="border  rounded-lg  w-full ">
-      <h2 className="text-4xl font-bold  p-6 border-b">Personal Information</h2>
-      <div className="p-6">
+      <h2 className="text-2xl md:text-4xl font-bold  p-4 md:p-6 border-b">
+        Personal Information
+      </h2>
+      <div className="p-4 md:p-6">
         <label className="block text-gray-600 mb-2">
           Upload your profile photo*
         </label>
@@ -66,7 +110,13 @@ const PersonalInfoForm = () => {
           </div>
           <div>
             <label className="block text-gray-600">Nationality*</label>
-            <Select options={[{ label: "Paris", value: "Paris" }]} />
+            <Select
+              options={[{ label: "Paris", value: "Paris" }]}
+              onChange={(value) =>
+                setFormData({ ...formData, nationality: value })
+              }
+              value={formData.nationality}
+            />
           </div>
           <div>
             <label className="block text-gray-600">Date of Birth*</label>
@@ -125,8 +175,11 @@ const PersonalInfoForm = () => {
           ></textarea>
         </div>
         <div className="flex justify-end">
-          <button className="mt-4 px-6 py-2 bg-primary text-white rounded-lg w-full md:w-auto">
-            Save Changes
+          <button
+            onClick={handleUpdate}
+            className="mt-4 px-6 py-2 bg-primary flex items-center gap-2 text-white rounded-lg w-full md:w-auto"
+          >
+            {loading && <Loading />}Save Changes
           </button>
         </div>
       </div>

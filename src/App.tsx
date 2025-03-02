@@ -10,10 +10,12 @@ import BookingConfirmation from "./pages/comfirmBooking";
 import Contact from "./pages/contect";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
+import ToastNotification from "./pages/_components/toastNotification";
 
 function App() {
   return (
     <div className="font-dmsans">
+      <ToastNotification />
       <Routes>
         <Route index element={<Home />} />
         <Route path="/listing" element={<Listing />} />

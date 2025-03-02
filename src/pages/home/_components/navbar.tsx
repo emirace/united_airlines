@@ -16,7 +16,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="flex flex-col md:flex-row justify-between gap-4 md:items-center py-4 bg-white">
+    <nav className="flex flex-col md:flex-row justify-between gap-4 md:items-center py-4 pb-12 md:pb-4 bg-white">
       <div className="flex items-center justify-between w-full md:w-auto ">
         <div className="flex items-center">
           <span className="text-xl font-bold flex items-center gap-2">
