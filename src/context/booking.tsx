@@ -15,6 +15,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchBooking = async (id: string) => {
     console.log(id);
+    setBookings([]);
     //
   };
 

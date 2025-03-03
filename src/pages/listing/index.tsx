@@ -25,7 +25,7 @@ function Listing() {
         <div className="font-bold mb-6 ">25 Jan</div>
         {flights.length <= 0 && <div className="">No flight available</div>}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {flights.map((flight) => (
+          {flights.map((_) => (
             <FlightCard />
           ))}
         </div>
