@@ -66,7 +66,7 @@ const Navbar = () => {
           isOpen ? "flex" : "hidden md:flex"
         }`}
       >
-        <IoSearchOutline className="text-3xl cursor-pointer" />
+        <IoSearchOutline className="text-3xl cursor-pointer hidden md:block" />
         {user ? (
           <div className="relative">
             <div
@@ -80,7 +80,7 @@ const Navbar = () => {
               />
             </div>
             {openMenu && (
-              <div className="absolute z-50 right-0 top-full bg-gray-100 rounded-xl p-4">
+              <div className="absolute z-50 left-0 md:right-0 top-full bg-gray-100 rounded-xl p-4">
                 <ul className="space-y-2">
                   {sidebars.map((sidebar) => (
                     <NavLink

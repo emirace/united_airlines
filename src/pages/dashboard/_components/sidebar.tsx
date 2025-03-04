@@ -25,7 +25,7 @@ const Sidebar = ({ close }: { close: () => void }) => {
   const { user, logout } = useUser();
   const navigate = useNavigate();
   return (
-    <div className="w-72 bg-gray-100 rounded-xl p-6">
+    <div className="w-72 md:bg-gray-100 rounded-xl p-6">
       {/* Profile Section */}
       <div className="flex flex-col items-center text-center">
         <div className="w-20 h-20 rounded-full overflow-hidden">
