@@ -35,7 +35,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between w-full md:w-auto ">
         <div className="flex items-center">
           <span className="text-xl font-bold flex items-center gap-2">
-            <img src={IMAGES.logo} alt="logo" className="h-10 " /> United
+            <img src={IMAGES.logo} alt="logo" className="h-10 " /> Flyzone
             Airlines
           </span>
         </div>

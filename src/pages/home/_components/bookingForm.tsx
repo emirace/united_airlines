@@ -105,8 +105,10 @@ const BookingForm = () => {
           <Select
             options={travelers}
             placeholder="Select Travelers"
-            onChange={(value) => updateFormData({ travelers: value })}
-            value={formData.travelers}
+            onChange={(value) =>
+              updateFormData({ travelers: parseFloat(value) })
+            }
+            value={`formData.travelers`}
           />
         </div>
       </div>
