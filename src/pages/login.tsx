@@ -2,9 +2,91 @@ import { useState } from "react";
 import IMAGES from "../assets/images";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link } from "react-router";
+import { loginUser } from "../services/auth";
+import { useToastNotification } from "../context/toastNotification";
+import { useUser } from "../context/user";
+import { useNavigate } from "react-router";
+import Loading from "./_components/loading";
+import { useSearchParams } from "react-router";
 
 const Login = () => {
+  const { addNotification } = useToastNotification();
+  const { getUser } = useUser();
+  const [searchParams, _] = useSearchParams();
+  const redirect = searchParams.get("redirect");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  // Form state
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  console.log(redirect);
+
+  // Error state
+  const [errors, setErrors] = useState<Record<string, string | null>>({
+    email: null,
+    password: null,
+    general: null,
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: null });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrors({
+      email: null,
+      password: null,
+      general: null,
+    });
+
+    const newErrors: Record<string, string | null> = {};
+
+    // Validation
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    }
+
+    if (Object.values(newErrors).some((error) => error)) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await loginUser({
+        email: formData.email,
+        password: formData.password,
+      });
+      localStorage.setItem("authToken", res.token);
+      await getUser();
+      setFormData({
+        email: "",
+        password: "",
+      });
+      if (redirect) {
+        navigate(redirect);
+      } else {
+        navigate("/dashboard/profile");
+      }
+    } catch (error: any) {
+      setErrors({ ...errors, general: error });
+      addNotification({ message: error, error: true });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="w-full max-w-5xl bg-white shadow-lg rounded-2xl overflow-hidden flex">
@@ -28,22 +110,27 @@ const Login = () => {
             </h2>
             <p className="mt-2 text-gray-600 text-sm">
               New here?{" "}
-              <Link to="/signup" className="text-primary font-semibold">
+              <Link
+                to={`/signup?redirect=${redirect || ""}`}
+                className="text-primary font-semibold"
+              >
                 Create an account
               </Link>
             </p>
           </div>
 
           {/* Form Fields */}
-          <form className="mt-6 space-y-4">
+          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Enter email id
               </label>
               <input
+                name="email"
                 type="email"
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
                 required
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -53,8 +140,10 @@ const Login = () => {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
                   className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
                   required
+                  onChange={handleChange}
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}
@@ -78,7 +167,12 @@ const Login = () => {
               </a>
             </div>
             {/* Login Button */}
-            <button className="mt-4 w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-opacity-70 transition">
+            <button
+              type="submit"
+              className="mt-4 w-full flex items-center gap-3 justify-center bg-primary text-white font-semibold py-3 rounded-lg hover:bg-opacity-70 transition"
+              disabled={loading}
+            >
+              {loading && <Loading size="sm" color="white" />}
               Login
             </button>
 

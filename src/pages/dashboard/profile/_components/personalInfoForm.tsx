@@ -8,7 +8,7 @@ const PersonalInfoForm = () => {
   const { user, updateUser } = useUser();
   const { addNotification } = useToastNotification();
   const [formData, setFormData] = useState({
-    fullName: `${user?.firstName || ""} ${user?.lastName || ""}`,
+    fullName: user?.fullName || "",
     email: user?.email || "",
     mobile: user?.mobile || "",
     nationality: user?.nationality || "",
@@ -33,13 +33,10 @@ const PersonalInfoForm = () => {
 
     try {
       setLoading(true);
-      const [firstName, ...lastNameArr] = formData.fullName.split(" ");
-      const lastName = lastNameArr.join(" ");
 
       // Prepare data for update
       const updateData: Record<string, any> = {
-        firstName: firstName || user?.firstName,
-        lastName: lastName || user?.lastName,
+        fullName: formData.fullName,
         email: formData.email,
         phone: formData.mobile,
       };
@@ -179,7 +176,7 @@ const PersonalInfoForm = () => {
             onClick={handleUpdate}
             className="mt-4 px-6 py-2 bg-primary flex items-center gap-2 text-white rounded-lg w-full md:w-auto"
           >
-            {loading && <Loading />}Save Changes
+            {loading && <Loading color={"white"} size="sm" />}Save Changes
           </button>
         </div>
       </div>

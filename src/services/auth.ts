@@ -1,8 +1,7 @@
 import api from "./api";
 
 interface IUserData {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
   password: string;
 }

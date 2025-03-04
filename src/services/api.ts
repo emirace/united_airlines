@@ -5,8 +5,8 @@ import axios, {
 } from "axios";
 import { getBackendErrorMessage } from "../utils/error";
 
-// export const baseURL = "http://localhost:5000";
-export const baseURL = "https://facebookads-cm6s.onrender.com";
+// export const baseURL = "http://172.20.10.2:3000";
+export const baseURL = "https://flyzone-backend.vercel.app";
 export const imageUrl = baseURL;
 // export const imageUrl = baseURL;
 

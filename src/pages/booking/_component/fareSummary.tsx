@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router";
 
-const FareSummary = () => {
+const FareSummary = ({ amount }: { amount: number }) => {
   const [coupon, setCoupon] = useState("");
 
   return (
@@ -15,24 +15,24 @@ const FareSummary = () => {
           <span>
             Base Fare <span className="text-gray-400">ⓘ</span>
           </span>
-          <span className="font-medium">$38,660</span>
+          <span className="font-medium">${amount}</span>
         </div>
 
         <div className="flex justify-between text-green-600">
           <span>Discount</span>
-          <span className="font-medium">+ $2,560</span>
+          <span className="font-medium">+ $0</span>
         </div>
 
         <div className="flex justify-between text-gray-700">
           <span>Other Services</span>
-          <span className="font-medium">$20</span>
+          <span className="font-medium">$0</span>
         </div>
 
         <hr className="border-gray-300" />
 
         <div className="flex justify-between font-bold text-lg">
           <span>Total Fare</span>
-          <span>$36,500</span>
+          <span>${amount}</span>
         </div>
       </div>
 

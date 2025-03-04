@@ -1,4 +1,6 @@
 import Select from "./select";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   IoLocationOutline,
   IoPaperPlaneOutline,
@@ -8,6 +10,7 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import { useFlight } from "../../../context/flight";
 import { useNavigate } from "react-router";
 import { useToastNotification } from "../../../context/toastNotification";
+import { useAirport } from "../../../context/airport";
 
 const classes = [
   { label: "Economy", value: "Economy" },
@@ -26,6 +29,7 @@ const travelers = [
 
 const BookingForm = () => {
   const { addNotification } = useToastNotification();
+  const { airports } = useAirport();
   const navigate = useNavigate();
   const { formData, updateFormData } = useFlight();
 
@@ -83,13 +87,15 @@ const BookingForm = () => {
           <button
             onClick={() => updateFormData({ type: "Round Trip" })}
             className={`px-4 py-2 rounded-r-lg ${
-              formData.type === "Round Trip" ? "bg-black text-white" : ""
+              formData.type === "Round Trip"
+                ? "bg-black text-white"
+                : "bg-gray-200"
             }`}
           >
             Round Trip
           </button>
         </div>
-        <div className="flex flex-col mdflex-row md:items-center gap-4 md:w-1/2">
+        <div className="flex flex-col md:flex-row md:items-center gap-4 md:w-1/2">
           <Select
             options={classes}
             placeholder="Select Class"
@@ -111,7 +117,12 @@ const BookingForm = () => {
             From
           </div>
           <Select
-            options={[]}
+            options={airports
+              .filter((airport) => airport._id !== formData.to)
+              .map((airport) => ({
+                label: `${airport.city}(${airport.code})`,
+                value: airport._id!,
+              }))}
             placeholder="Select Location"
             bg="bg-white"
             onChange={(value) => updateFormData({ from: value })}
@@ -125,7 +136,12 @@ const BookingForm = () => {
             To
           </div>
           <Select
-            options={[]}
+            options={airports
+              .filter((airport) => airport._id !== formData.from)
+              .map((airport) => ({
+                label: `${airport.city}(${airport.code})`,
+                value: airport._id!,
+              }))}
             placeholder="Select Location"
             bg="bg-white"
             onChange={(value) => updateFormData({ to: value })}
@@ -138,18 +154,19 @@ const BookingForm = () => {
             <IoCalendarClearOutline />
             Departure
           </div>
-          <Select
-            options={[]}
-            placeholder="Select Location"
-            bg="bg-white"
-            onChange={(value) => updateFormData({ date: value })}
-            value={formData.date}
+          <DatePicker
+            selected={formData.date ? new Date(formData.date) : null}
+            onChange={(date) => updateFormData({ date: date?.toISOString() })}
+            minDate={new Date()}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="Select Date"
+            className="w-full bg-white border p-2 rounded-md text-gray-900"
           />
         </div>
       </div>
       <button
         onClick={handleSubmit}
-        className="flex items-center absolute right-6 -bottom-5 gap-3 justify-center bg-primary text-white  mt-4 py-2 px-4 rounded-lg"
+        className="flex items-center absolute right-6 -bottom-5 gap-3 justify-center bg-primary text-white mt-4 py-2 px-4 rounded-lg hover:scale-105 transition-transform"
       >
         Find Flight
         <IoIosArrowRoundForward className="text-xl" />

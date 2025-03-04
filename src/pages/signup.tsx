@@ -2,9 +2,103 @@ import { useState } from "react";
 import IMAGES from "../assets/images";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
+import { useToastNotification } from "../context/toastNotification";
+import { registerUser } from "../services/auth";
+import Loading from "./_components/loading";
+import { useSearchParams } from "react-router";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const { addNotification } = useToastNotification();
+  const [loading, setLoading] = useState(false);
+
+  const [searchParams, _] = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Form state
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  // Error state
+  const [errors, setErrors] = useState<Record<string, string | null>>({
+    firstName: null,
+    lastName: null,
+    email: null,
+    password: null,
+    confirmPassword: null,
+    general: null,
+  });
+
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: null });
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrors({
+      firstName: null,
+      lastName: null,
+      email: null,
+      password: null,
+      confirmPassword: null,
+      general: null,
+    });
+
+    const newErrors: Record<string, string | null> = {};
+
+    if (!formData.email.trim() || !validateEmail(formData.email)) {
+      newErrors.email = "A valid email is required";
+    }
+
+    if (!formData.password.trim() || formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long";
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    if (Object.values(newErrors).some((error) => error)) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await registerUser({
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+      });
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      if (redirect) {
+        navigate(redirect);
+      } else {
+        navigate("/login");
+      }
+    } catch (error: any) {
+      setErrors({ ...errors, general: error });
+      addNotification({ message: error, error: true });
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="w-full max-w-5xl bg-white shadow-lg rounded-2xl overflow-hidden flex">
@@ -28,22 +122,40 @@ const SignUp = () => {
             </h2>
             <p className="mt-2 text-gray-600 text-sm">
               Already a member?{" "}
-              <Link to="/login" className="text-primary font-semibold">
+              <Link
+                to={`/login?redirect=${redirect || ""}`}
+                className="text-primary font-semibold"
+              >
                 Login
               </Link>
             </p>
           </div>
 
           {/* Form Fields */}
-          <form className="mt-6 space-y-4">
+          <form className="mt-6 space-y-4" onSubmit={handleRegister}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Enter full name
+              </label>
+              <input
+                type="text"
+                name="fullName"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
+                required
+                onChange={handleChange}
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Enter email id
               </label>
               <input
                 type="email"
+                name="email"
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
                 required
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -52,11 +164,16 @@ const SignUp = () => {
               </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  onChange={handleChange}
                   className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
                   required
                 />
-                <span className="absolute inset-y-0 right-3 flex items-center text-gray-400 cursor-pointer">
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-400 cursor-pointer"
+                >
                   {showPassword ? <FiEye /> : <FiEyeOff />}
                 </span>
               </div>
@@ -67,15 +184,17 @@ const SignUp = () => {
               </label>
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  onChange={handleChange}
                   className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
                   required
                 />
                 <span
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 cursor-pointer"
                 >
-                  {showPassword ? <FiEye /> : <FiEyeOff />}
+                  {showConfirmPassword ? <FiEye /> : <FiEyeOff />}
                 </span>
               </div>
             </div>
@@ -90,7 +209,12 @@ const SignUp = () => {
               </label>
             </div>
             {/* Login Button */}
-            <button className="mt-4 w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-opacity-70 transition">
+            <button
+              disabled={loading}
+              type="submit"
+              className="mt-4 w-full flex items-center justify-center gap-3 bg-primary text-white font-semibold py-3 rounded-lg hover:bg-opacity-70 transition"
+            >
+              {loading && <Loading size="sm" color="white" />}
               Sign Up
             </button>
 

@@ -117,7 +117,7 @@ const UpdatePassword = () => {
             onClick={handleUpdate}
             className="mt-4 px-6 py-2 bg-primary flex items-center justify-center gap-2 text-white rounded-lg w-full md:w-auto"
           >
-            {loading && <Loading />} Change Password
+            {loading && <Loading color={"white"} size="sm" />} Change Password
           </button>
         </div>
       </div>

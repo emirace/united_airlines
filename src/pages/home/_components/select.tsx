@@ -76,8 +76,10 @@ const Select: React.FC<Props> = ({
       <button
         onClick={toggleDropdown}
         className={`flex justify-between items-center gap-3 px-4 py-2 w-full  ${
-          isOpen ? "border border-primary rounded-t-lg" : "rounded-lg"
-        } ${bg || "bg-gray-100"}`}
+          isOpen ? "border border-primary " : "rounded-lg"
+        } ${bg || "bg-gray-100"} ${
+          position === "top" ? "rounded-b-lg" : "rounded-t-lg"
+        }`}
       >
         <span className="whitespace-nowrap font-medium text-lg text-gray-400">
           {selected ? selected.label : placeholder}
@@ -90,9 +92,11 @@ const Select: React.FC<Props> = ({
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className={`absolute w-full rounded-b-lg bg-white  z-10 ${
-            position === "top" ? "bottom-full " : "top-full"
-          } ${isOpen ? "border-x border-b border-primary" : ""}`}
+          className={`absolute w-full bg-white  z-10 ${
+            position === "top" && isOpen
+              ? "bottom-full border-x border-t border-primary rounded-t-lg"
+              : "top-full border-x border-b border-primary rounded-b-lg"
+          } `}
         >
           {/* Options List */}
           <div className="max-h-60 overflow-y-auto">

@@ -1,3 +1,5 @@
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   IoLocationOutline,
   IoPaperPlaneOutline,
@@ -8,6 +10,7 @@ import Select from "../../home/_components/select";
 import { useFlight } from "../../../context/flight";
 import { useToastNotification } from "../../../context/toastNotification";
 import { useNavigate } from "react-router";
+import { useAirport } from "../../../context/airport";
 
 const classes = [
   { label: "Economy", value: "Economy" },
@@ -25,6 +28,7 @@ const travelers = [
 ];
 
 const UpdateForm = () => {
+  const { airports } = useAirport();
   const { addNotification } = useToastNotification();
   const navigate = useNavigate();
   const { formData, updateFormData } = useFlight();
@@ -110,7 +114,12 @@ const UpdateForm = () => {
             From
           </div>
           <Select
-            options={[]}
+            options={airports
+              .filter((airport) => airport._id !== formData.to)
+              .map((airport) => ({
+                label: `${airport.city}(${airport.code})`,
+                value: airport._id!,
+              }))}
             placeholder="Select Location"
             bg="bg-white"
             onChange={(value) => updateFormData({ from: value })}
@@ -124,7 +133,12 @@ const UpdateForm = () => {
             To
           </div>
           <Select
-            options={[]}
+            options={airports
+              .filter((airport) => airport._id !== formData.from)
+              .map((airport) => ({
+                label: `${airport.city}(${airport.code})`,
+                value: airport._id!,
+              }))}
             placeholder="Select Location"
             bg="bg-white"
             onChange={(value) => updateFormData({ to: value })}
@@ -137,12 +151,13 @@ const UpdateForm = () => {
             <IoCalendarClearOutline />
             Departure
           </div>
-          <Select
-            options={[]}
-            placeholder="Select Location"
-            bg="bg-white"
-            onChange={(value) => updateFormData({ date: value })}
-            value={formData.date}
+          <DatePicker
+            selected={formData.date ? new Date(formData.date) : null}
+            onChange={(date) => updateFormData({ date: date?.toISOString() })}
+            minDate={new Date()}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="Select Date"
+            className="w-full bg-white border p-2 rounded-md text-gray-900"
           />
         </div>
       </div>

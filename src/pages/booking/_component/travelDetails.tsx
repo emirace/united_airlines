@@ -1,12 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { IFlight, useFlight } from "../../../context/flight";
+import { useUser } from "../../../context/user";
 
-const TravelerDetails = () => {
+const TravelerDetails = ({ flight }: { flight: IFlight }) => {
   const navigate = useNavigate();
-  const [travelers, setTravelers] = useState(["Adult 1", "Adult 2"]);
+  const { user } = useUser();
+  const { formData, updateFormData } = useFlight();
+  const [travelers, setTravelers] = useState<number>(formData.travelers);
 
   const addTraveler = () => {
-    setTravelers([...travelers, `Adult ${travelers.length + 1}`]);
+    setTravelers(travelers + 1);
+    updateFormData({ travelers: formData.travelers + 1 });
+  };
+
+  const handleSubmit = async () => {
+    if (!user) {
+      navigate(`/login?redirect=/booking?id=${flight._id}`);
+      return;
+    }
+    navigate("/payment");
   };
 
   return (
@@ -31,12 +44,12 @@ const TravelerDetails = () => {
       </button>
 
       {/* Traveler List */}
-      {travelers.map((traveler, index) => (
+      {[...Array(travelers)].map((_, index) => (
         <div
           key={index}
           className="flex justify-between items-center bg-gray-100 px-4 py-3 rounded-md cursor-pointer"
         >
-          <span className="font-medium">{traveler}</span>
+          <span className="font-medium">Adult {index + 1}</span>
           <span className="text-xl font-bold">+</span>
         </div>
       ))}
@@ -72,7 +85,7 @@ const TravelerDetails = () => {
 
       {/* Proceed to Payment Button */}
       <button
-        onClick={() => navigate("/payment")}
+        onClick={handleSubmit}
         className="w-full bg-primary text-white font-semibold py-3 rounded-md hover:bg-opacity-70 transition"
       >
         Proceed To Payment

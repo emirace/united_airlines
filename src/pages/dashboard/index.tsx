@@ -22,7 +22,7 @@ function Dashboard() {
           <div className="fixed bg-black/30 top-0 left-0 h-full w-full z-20 md:hidden" />
         )}
         <div
-          className={`flex-1 fixed right-0 top-0 bottom-0 md:relative bg-white  p-4 md:p-0 z-20 transition-transform duration-300 ${
+          className={`w-1/4 fixed right-0 top-0 bottom-0 md:relative bg-white  p-4 md:p-0 z-20 transition-transform duration-300 ${
             isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
           }`}
         >
@@ -32,7 +32,7 @@ function Dashboard() {
           />
           <Sidebar close={() => setIsOpen(false)} />
         </div>
-        <div className="md:flex-[3] w-full md:w-auto">
+        <div className="md:w-3/4 w-full">
           <Outlet />
         </div>
       </div>

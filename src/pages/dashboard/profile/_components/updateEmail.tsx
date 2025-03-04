@@ -73,7 +73,7 @@ const UpdateEmail = () => {
             onClick={handleUpdate}
             className="mt-4 px-6 py-2 bg-primary flex items-center justify-center gap-2 text-white rounded-lg w-full md:w-auto"
           >
-            {loading && <Loading />}Save Email
+            {loading && <Loading color={"white"} size="sm" />}Save Email
           </button>
         </div>
       </div>

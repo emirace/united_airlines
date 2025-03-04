@@ -5,8 +5,7 @@ export interface IUser {
   status: string;
   emailVerified: boolean;
   email: string;
-  lastName: string;
-  firstName: string;
+  fullName: string;
   image?: string;
   mobile: string;
   nationality: string;
@@ -16,8 +15,7 @@ export interface IUser {
 }
 
 export interface IProfileData {
-  lastName?: string;
-  firstName?: string;
+  fullName?: string;
   email?: string;
   image?: string;
   mobile?: string;
