@@ -8,36 +8,38 @@ import FareSummary from "./_component/fareSummary";
 import Footer from "../home/_components/footer";
 import { IFlight, useFlight } from "../../context/flight";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
 import Loading from "../_components/loading";
 import moment from "moment";
 import { formatDuration } from "../../utils";
+import { useNavigate } from "react-router";
 
 function Booking() {
-  const { getFlight } = useFlight();
+  const { getFlight, formData } = useFlight();
   const [flight, setFlight] = useState<IFlight | null>(null);
-  const [searchParams, _] = useSearchParams();
-  const id = searchParams.get("id");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     const loadFlight = async () => {
-      if (id) {
+      if (formData.flightId) {
         try {
           setLoading(true);
           setError("");
-          const res = await getFlight(id);
+          const res = await getFlight(formData.flightId);
           setFlight(res as any);
         } catch (error: any) {
           setError(error);
         } finally {
           setLoading(false);
         }
+      } else {
+        navigate(-1);
       }
     };
     loadFlight();
-  }, []);
-  console.log(flight);
+  }, [formData.flightId]);
+
   return (
     <div className="max-w-[75rem] mx-auto w-full px-4">
       <Navbar />

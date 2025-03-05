@@ -2,24 +2,38 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { IFlight, useFlight } from "../../../context/flight";
 import { useUser } from "../../../context/user";
+import Modal from "../../_components/modal";
+import FlightSeatSelection from "./flightSeatSelection";
+import PassengerForm from "./passengerForm";
+import { useToastNotification } from "../../../context/toastNotification";
 
 const TravelerDetails = ({ flight }: { flight: IFlight }) => {
   const navigate = useNavigate();
+  const { addNotification } = useToastNotification();
   const { user } = useUser();
   const { formData, updateFormData } = useFlight();
-  const [travelers, setTravelers] = useState<number>(formData.travelers);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const addTraveler = () => {
-    setTravelers(travelers + 1);
-    updateFormData({ travelers: formData.travelers + 1 });
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (selectedSeats: string[]) => {
+    updateFormData({ seats: selectedSeats });
     if (!user) {
       navigate(`/login?redirect=/booking?id=${flight._id}`);
       return;
     }
     navigate("/payment");
+  };
+
+  const handleContinue = () => {
+    if (!formData.email) {
+      addNotification({ message: "Enter email" });
+      return;
+    }
+
+    if (!formData.phone) {
+      addNotification({ message: "Enter mobile number" });
+      return;
+    }
+    setIsOpen(true);
   };
 
   return (
@@ -34,28 +48,10 @@ const TravelerDetails = ({ flight }: { flight: IFlight }) => {
         </span>
         <span>Please make sure you enter the Name as per your passport</span>
       </div>
-
-      {/* Add New Adult Button */}
-      <button
-        onClick={addTraveler}
-        className="ml-auto block text-sm font-semibold text-primary border border-primary px-3 py-2 rounded-md hover:bg-indigo-100 transition"
-      >
-        Add New Adult
-      </button>
-
-      {/* Traveler List */}
-      {[...Array(travelers)].map((_, index) => (
-        <div
-          key={index}
-          className="flex justify-between items-center bg-gray-100 px-4 py-3 rounded-md cursor-pointer"
-        >
-          <span className="font-medium">Adult {index + 1}</span>
-          <span className="text-xl font-bold">+</span>
-        </div>
-      ))}
+      <PassengerForm />
 
       {/* Booking Details */}
-      <div className="space-y-2">
+      <div className="space-y-2 mt-6">
         <h3 className="text-lg font-semibold">
           Booking detail will be sent to
         </h3>
@@ -67,6 +63,8 @@ const TravelerDetails = ({ flight }: { flight: IFlight }) => {
             <input
               type="text"
               placeholder="Enter your mobile number"
+              onChange={(e) => updateFormData({ phone: e.target.value })}
+              value={formData.phone}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-primary"
             />
           </div>
@@ -77,6 +75,8 @@ const TravelerDetails = ({ flight }: { flight: IFlight }) => {
             <input
               type="email"
               placeholder="Enter your email address"
+              value={formData.email}
+              onChange={(e) => updateFormData({ email: e.target.value })}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-primary"
             />
           </div>
@@ -85,11 +85,18 @@ const TravelerDetails = ({ flight }: { flight: IFlight }) => {
 
       {/* Proceed to Payment Button */}
       <button
-        onClick={handleSubmit}
+        onClick={handleContinue}
         className="w-full bg-primary text-white font-semibold py-3 rounded-md hover:bg-opacity-70 transition"
       >
-        Proceed To Payment
+        Continue
       </button>
+
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <FlightSeatSelection
+          bookedSeats={["A1", "B2", "C3"]}
+          onSubmit={handleSubmit}
+        />
+      </Modal>
     </div>
   );
 };

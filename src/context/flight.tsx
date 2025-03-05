@@ -7,6 +7,20 @@ import {
   deleteFlight,
 } from "../services/flight";
 import { IAirport } from "./airport";
+import { useUser } from "./user";
+
+interface IPassenger {
+  id: number;
+  title: string;
+  firstName: string;
+  lastName: string;
+  dob: { day: string; month: string; year: string };
+  nationality: string;
+  passportNumber: string;
+  passportCountry: string;
+  passportExpiry: string;
+  expanded: boolean;
+}
 
 interface IFormData {
   type: string;
@@ -15,6 +29,11 @@ interface IFormData {
   from: string;
   to: string;
   date: string;
+  flightId: string;
+  travellersInfo: IPassenger[];
+  email: string;
+  phone: string;
+  seats: string[];
 }
 
 export interface IFlight {
@@ -56,16 +75,35 @@ const FlightContext = createContext<IFlightContextType | undefined>(undefined);
 export const FlightProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const { user } = useUser();
   const [flights, setFlights] = useState<IFlight[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<IFormData>({
     type: "One Way",
     class: "",
     travelers: 1,
     from: "",
     to: "",
     date: "",
+    flightId: "",
+    travellersInfo: [
+      {
+        id: 1,
+        title: "Mr",
+        firstName: "",
+        lastName: "",
+        dob: { day: "", month: "", year: "" },
+        nationality: "",
+        passportNumber: "",
+        passportCountry: "",
+        passportExpiry: "",
+        expanded: true,
+      },
+    ],
+    email: user?.email || "",
+    phone: "",
+    seats: [],
   });
 
   const updateFormData = (value: Partial<IFormData>) => {
@@ -87,8 +125,8 @@ export const FlightProvider: React.FC<{ children: ReactNode }> = ({
 
   const createFlight = async (flightData: IFlightData) => {
     try {
-      const newFlight = await addFlight(flightData);
-      setFlights((prev) => [...prev, newFlight]);
+      await addFlight(flightData);
+      fetchFlights({});
     } catch (error) {
       console.error("Error adding flight:", error);
       throw error;
@@ -106,10 +144,8 @@ export const FlightProvider: React.FC<{ children: ReactNode }> = ({
 
   const modifyFlight = async (id: string, flightData: Partial<IFlight>) => {
     try {
-      const updatedFlight = await updateFlight(id, flightData);
-      setFlights((prev) =>
-        prev.map((flight) => (flight._id === id ? updatedFlight : flight))
-      );
+      await updateFlight(id, flightData);
+      fetchFlights({});
     } catch (error) {
       console.error("Error updating flight:", error);
       throw error;

@@ -1,29 +1,119 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createBooking,
+  cancelBooking,
+  checkInBooking,
+  getUserBookings,
+  getBookings,
+} from "../services/booking";
+import { IFlight } from "./flight";
+import { IUser } from "../types/user";
 
-interface IBooking {}
-
-interface BookingContextProps {
-  Bookings: IBooking[];
-  fetchBooking: (id: string) => Promise<void>;
+export interface IBooking {
+  _id: string;
+  userId: IUser;
+  bookingId: string;
+  class: string;
+  flightId: IFlight;
+  seatId: string;
+  status: string;
+  paymentStatus: string;
+  createdAt: string;
+  travellers: object[];
 }
 
-const BookingContext = createContext<BookingContextProps | undefined>(
-  undefined
-);
-export const BookingProvider = ({ children }: { children: ReactNode }) => {
-  const [Bookings, setBookings] = useState([]);
+interface BookingContextType {
+  bookings: IBooking[];
+  loading: boolean;
+  fetchUserBookings: () => Promise<void>;
+  fetchBookings: () => Promise<void>;
+  createNewBooking: (
+    userId: string,
+    flightId: string,
+    seatId: string
+  ) => Promise<void>;
+  cancelUserBooking: (id: string) => Promise<void>;
+  checkInUserBooking: (id: string) => Promise<void>;
+}
 
-  const fetchBooking = async (id: string) => {
-    console.log(id);
-    setBookings([]);
-    //
+const BookingContext = createContext<BookingContextType | undefined>(undefined);
+
+export const BookingProvider = ({ children }: { children: ReactNode }) => {
+  const [bookings, setBookings] = useState<IBooking[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const fetchUserBookings = async () => {
+    setLoading(true);
+    try {
+      const data = await getUserBookings();
+      setBookings(data);
+    } catch (error) {
+      console.error("Error fetching user bookings:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchBookings = async () => {
+    setLoading(true);
+    try {
+      const data = await getBookings();
+      setBookings(data);
+    } catch (error) {
+      console.error("Error fetching user bookings:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createNewBooking = async (
+    userId: string,
+    flightId: string,
+    seatId: string
+  ) => {
+    try {
+      await createBooking(userId, flightId, seatId);
+      fetchUserBookings();
+    } catch (error) {
+      console.error("Error creating booking:", error);
+      throw error;
+    }
+  };
+
+  const cancelUserBooking = async (id: string) => {
+    try {
+      const updatedBooking = await cancelBooking(id);
+      setBookings((prev) =>
+        prev.map((b) => (b._id === id ? updatedBooking : b))
+      );
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
+    }
+  };
+
+  const checkInUserBooking = async (id: string) => {
+    try {
+      const updatedBooking = await checkInBooking(id);
+      setBookings((prev) =>
+        prev.map((b) => (b._id === id ? updatedBooking : b))
+      );
+    } catch (error) {
+      console.error("Error checking in booking:", error);
+    }
   };
 
   return (
     <BookingContext.Provider
       value={{
-        Bookings,
-        fetchBooking,
+        bookings,
+        loading,
+        fetchUserBookings,
+        fetchBookings,
+        createNewBooking,
+        cancelUserBooking,
+        checkInUserBooking,
       }}
     >
       {children}
@@ -34,7 +124,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
 export const useBooking = () => {
   const context = useContext(BookingContext);
   if (!context) {
-    throw new Error("useBooking must be used within a CampaignProvider");
+    throw new Error("useBooking must be used within a BookingProvider");
   }
   return context;
 };

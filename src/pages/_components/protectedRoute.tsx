@@ -14,7 +14,11 @@ const ProtectedRoute: React.FC = () => {
   }, [user, loading, navigate]);
 
   if (loading) {
-    return <Loading />;
+    return (
+      <div className="h-screen w-full flex items-center justify-center">
+        <Loading />
+      </div>
+    );
   }
 
   return user ? <Outlet /> : null;

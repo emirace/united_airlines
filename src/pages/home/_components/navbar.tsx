@@ -11,7 +11,9 @@ import {
   HiOutlineTicket,
   // HiOutlineCog,
   HiOutlineLogout,
+  HiOutlineLocationMarker,
 } from "react-icons/hi";
+import { Link } from "react-router";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -20,13 +22,15 @@ const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const navLinks = [
     { path: "/", label: "Home" },
+    { path: "/tracking", label: "Track" },
     { path: "/dashboard/bookings", label: "Bookings" },
     { path: "/contact", label: "Contact" },
   ];
 
   const sidebars = [
-    { name: "Profile", icon: HiOutlineUser, path: "profile" },
-    { name: "Booking", icon: HiOutlineTicket, path: "bookings" },
+    { name: "Profile", icon: HiOutlineUser, path: "/dashboard/profile" },
+    { name: "Booking", icon: HiOutlineTicket, path: "/dashboard/bookings" },
+    { name: "Track", icon: HiOutlineLocationMarker, path: "/tracking" },
     // { name: "Settings", icon: HiOutlineCog, path: "settings" },
   ];
 
@@ -34,10 +38,10 @@ const Navbar = () => {
     <nav className="flex flex-col md:flex-row justify-between gap-4 md:items-center py-4 pb-12 md:pb-4 bg-white">
       <div className="flex items-center justify-between w-full md:w-auto ">
         <div className="flex items-center">
-          <span className="text-xl font-bold flex items-center gap-2">
+          <Link to="/" className="text-xl font-bold flex items-center gap-2">
             <img src={IMAGES.logo} alt="logo" className="h-10 " /> Flyzone
             Airlines
-          </span>
+          </Link>
         </div>
         <IoMenuOutline
           className="text-4xl md:hidden"
@@ -80,7 +84,7 @@ const Navbar = () => {
               />
             </div>
             {openMenu && (
-              <div className="absolute z-50 left-0 md:right-0 top-full bg-gray-100 rounded-xl p-4">
+              <div className="absolute z-50 left-0 md:left-auto md:right-0 top-full bg-gray-100 rounded-xl p-4">
                 <ul className="space-y-2">
                   {sidebars.map((sidebar) => (
                     <NavLink

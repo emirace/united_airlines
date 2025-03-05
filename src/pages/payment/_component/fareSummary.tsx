@@ -1,6 +1,11 @@
 import { FaUser, FaTicketAlt } from "react-icons/fa";
+import { IFlight, useFlight } from "../../../context/flight";
+import { formatDuration } from "../../../utils";
+import moment from "moment";
+import { Link } from "react-router";
 
-const FareSummary = () => {
+const FareSummary = ({ flight }: { flight: IFlight | null }) => {
+  const { formData } = useFlight();
   return (
     <div className="w-full space-y-4">
       {/* Fare Summary */}
@@ -11,24 +16,24 @@ const FareSummary = () => {
           <span>
             Base Fare <span className="text-gray-400">ⓘ</span>
           </span>
-          <span className="font-medium">$38,660</span>
+          <span className="font-medium">${flight?.price}</span>
         </div>
 
         <div className="flex justify-between text-green-600">
           <span>Discount</span>
-          <span className="font-medium">+ $2,560</span>
+          <span className="font-medium">+ $0</span>
         </div>
 
         <div className="flex justify-between text-gray-700">
           <span>Other Services</span>
-          <span className="font-medium">$20</span>
+          <span className="font-medium">$0</span>
         </div>
 
         <hr className="border-gray-300" />
 
         <div className="flex justify-between font-bold text-lg">
           <span>Total Fare</span>
-          <span>$36,500</span>
+          <span>${flight?.price}</span>
         </div>
       </div>
 
@@ -44,9 +49,14 @@ const FareSummary = () => {
           </p>
           <div className="flex items-center space-x-2">
             <div className="w-6 h-4 bg-orange-500 rounded-sm"></div>
-            <p className="text-lg font-semibold">Mumbai → New York</p>
+            <p className="text-lg font-semibold">
+              {flight?.origin?.city} → {flight?.destination?.city}
+            </p>
           </div>
-          <p className="text-gray-600 text-sm">25 Jan • 1 Stop • 05h 25m</p>
+          <p className="text-gray-600 text-sm">
+            {moment(flight?.departureTime).format("D MMM")} • 1 Stop •{" "}
+            {formatDuration(flight?.duration || 0)}
+          </p>
         </div>
 
         <hr className="border-gray-300" />
@@ -57,13 +67,25 @@ const FareSummary = () => {
             <FaUser className="text-gray-600" />
             <span>Traveler detail</span>
           </p>
-          <p className="font-medium text-gray-800">Carolyn Ortiz</p>
-          <p className="text-gray-600 text-sm">Adult • Female • Dec-2-1990</p>
+          {formData.travellersInfo.map((traveller) => (
+            <>
+              <p className="font-medium text-gray-800">
+                {traveller?.firstName} {traveller?.lastName}
+              </p>
+              <p className="text-gray-600 text-sm">
+                Adult • {traveller.nationality} • {traveller.dob.day}{" "}
+                {traveller.dob.month} {traveller.dob.year}
+              </p>
+            </>
+          ))}
         </div>
 
-        <button className="w-full text-indigo-600 font-medium hover:underline">
+        <Link
+          to="/booking"
+          className="w-full text-indigo-600 font-medium hover:underline"
+        >
           Review booking
-        </button>
+        </Link>
       </div>
     </div>
   );

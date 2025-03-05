@@ -14,6 +14,11 @@ import ToastNotification from "./pages/_components/toastNotification";
 import Airports from "./pages/dashboard/airports";
 import Flights from "./pages/dashboard/flights";
 import ProtectedRoute from "./pages/_components/protectedRoute";
+import Payments from "./pages/dashboard/payments";
+import AllPayments from "./pages/dashboard/payments/all";
+import AllBookings from "./pages/dashboard/bookings/all";
+import Settings from "./pages/dashboard/settings";
+import Tracking from "./pages/tracking";
 
 function App() {
   return (
@@ -28,6 +33,10 @@ function App() {
             <Route path="bookings" element={<Bookings />} />
             <Route path="airports" element={<Airports />} />
             <Route path="flights" element={<Flights />} />
+            <Route path="payments" element={<Payments />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="all-payments" element={<AllPayments />} />
+            <Route path="all-bookings" element={<AllBookings />} />
           </Route>
           <Route path="/confirm" element={<BookingConfirmation />} />
         </Route>
@@ -36,6 +45,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/tracking" element={<Tracking />} />
       </Routes>
     </div>
   );

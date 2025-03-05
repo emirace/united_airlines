@@ -1,11 +1,16 @@
 import { FaPlane, FaEye } from "react-icons/fa";
-import { Link } from "react-router";
 import { IFlight, useFlight } from "../../../context/flight";
 import moment from "moment";
 import { formatDuration } from "../../../utils";
+import { useNavigate } from "react-router";
 
 const FlightCard = ({ flight }: { flight: IFlight }) => {
-  const { formData } = useFlight();
+  const { formData, updateFormData } = useFlight();
+  const navigate = useNavigate();
+  const handleBooking = (id: string) => {
+    updateFormData({ flightId: id });
+    navigate("/booking");
+  };
   return (
     <div className="border rounded-lg p-6 bg-white flex flex-col space-y-4 w-full">
       {/* Airline Info */}
@@ -53,12 +58,12 @@ const FlightCard = ({ flight }: { flight: IFlight }) => {
         <div className="flex flex-col md:items-end md:w-1/4 gap-2">
           <p className="text-2xl font-bold text-black">${flight.price}</p>
           <div className="flex flex-row md:flex-col gap-4">
-            <Link
-              to={`/booking?id=${flight._id}`}
+            <button
+              onClick={() => handleBooking(flight._id!)}
               className="bg-black text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800"
             >
               Book Now
-            </Link>
+            </button>
 
             <div className="text-blue-500 text-sm flex items-center space-x-1 cursor-pointer hover:underline">
               <FaEye />

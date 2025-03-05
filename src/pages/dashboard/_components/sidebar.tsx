@@ -1,7 +1,7 @@
 import {
   HiOutlineUser,
   HiOutlineTicket,
-  // HiOutlineCog,
+  HiOutlineCog,
   HiOutlineLogout,
 } from "react-icons/hi";
 import { MdOutlineFlight } from "react-icons/md";
@@ -9,16 +9,20 @@ import { NavLink } from "react-router";
 import { MdFlightTakeoff } from "react-icons/md";
 import { useUser } from "../../../context/user";
 import { useNavigate } from "react-router";
+import { FaCreditCard } from "react-icons/fa";
 
 const sidebars = [
   { name: "Profile", icon: HiOutlineUser, path: "profile" },
-  { name: "Booking", icon: HiOutlineTicket, path: "bookings" },
-  // { name: "Settings", icon: HiOutlineCog, path: "settings" },
+  { name: "Bookings", icon: HiOutlineTicket, path: "bookings" },
+  { name: "Payments", icon: FaCreditCard, path: "payments" },
 ];
 
 const adminSidebars = [
   { name: "Airports", icon: MdOutlineFlight, path: "airports" },
   { name: "Flights", icon: MdFlightTakeoff, path: "flights" },
+  { name: "All Bookings", icon: HiOutlineTicket, path: "all-bookings" },
+  { name: "All Payments", icon: FaCreditCard, path: "all-payments" },
+  { name: "Settings", icon: HiOutlineCog, path: "settings" },
 ];
 
 const Sidebar = ({ close }: { close: () => void }) => {
