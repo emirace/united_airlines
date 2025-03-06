@@ -9,8 +9,10 @@ import {
 import Navbar from "./home/_components/navbar";
 import Footer from "./home/_components/footer";
 import IMAGES from "../assets/images";
+import { useSetting } from "../context/setting";
 
 const Contact = () => {
+  const { settings } = useSetting();
   return (
     <div className="max-w-[75rem] mx-auto px-4">
       <Navbar />
@@ -41,7 +43,7 @@ const Contact = () => {
                 href="tel:+123456789"
                 className="px-3 py-2 bg-purple-100 text-purple-600 rounded-lg text-sm"
               >
-                +123 456 789
+                +(222) 6543 677
               </a>
               <a
                 href="tel:+2224567586"
@@ -62,10 +64,10 @@ const Contact = () => {
               Send us an email for inquiries.
             </p>
             <a
-              href="mailto:example@gmail.com"
+              href={`mailto:${settings.mail.name || "example@gmail.com"}`}
               className="mt-4 text-blue-500 underline block"
             >
-              example@gmail.com
+              {settings.mail.name || "example@gmail.com"}
             </a>
           </div>
 
