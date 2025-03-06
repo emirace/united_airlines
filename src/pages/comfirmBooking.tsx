@@ -1,7 +1,7 @@
 import {
   FaRegCalendar,
   FaUsers,
-  FaRegFilePdf,
+  // FaRegFilePdf,
   FaRegIdBadge,
   FaRegUser,
   FaRegCreditCard,
