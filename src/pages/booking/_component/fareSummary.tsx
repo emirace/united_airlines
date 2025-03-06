@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router";
+import { useFlight } from "../../../context/flight";
 
 const FareSummary = ({ amount }: { amount: number }) => {
+  const { formData } = useFlight();
   const [coupon, setCoupon] = useState("");
 
   return (
@@ -15,7 +17,9 @@ const FareSummary = ({ amount }: { amount: number }) => {
           <span>
             Base Fare <span className="text-gray-400">ⓘ</span>
           </span>
-          <span className="font-medium">${amount}</span>
+          <span className="font-medium">
+            ${formData.type === "Round Trip" ? amount * 2 : amount}
+          </span>
         </div>
 
         <div className="flex justify-between text-green-600">
@@ -32,7 +36,7 @@ const FareSummary = ({ amount }: { amount: number }) => {
 
         <div className="flex justify-between font-bold text-lg">
           <span>Total Fare</span>
-          <span>${amount}</span>
+          <span>$ ${formData.type === "Round Trip" ? amount * 2 : amount}</span>
         </div>
       </div>
 

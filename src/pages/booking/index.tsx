@@ -40,6 +40,8 @@ function Booking() {
     loadFlight();
   }, [formData.flightId]);
 
+  console.log(formData);
+
   return (
     <div className="max-w-[75rem] mx-auto w-full px-4">
       <Navbar />

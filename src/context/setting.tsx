@@ -20,6 +20,10 @@ export interface ISetting {
     address: string;
     rate: number;
   };
+  mail: {
+    name: string;
+    password: string;
+  };
 }
 
 interface SettingContextProps {
@@ -44,6 +48,10 @@ export const SettingProvider: React.FC<Props> = ({ children }) => {
       network: "",
       address: "",
       rate: 0,
+    },
+    mail: {
+      name: "",
+      password: "",
     },
   });
 

@@ -108,11 +108,15 @@ const BookingForm = () => {
             onChange={(value) =>
               updateFormData({ travelers: parseFloat(value) })
             }
-            value={`formData.travelers`}
+            value={`${formData.travelers}`}
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div
+        className={`grid grid-cols-1 ${
+          formData.type === "Round Trip" ? "md:grid-cols-4" : "md:grid-cols-3"
+        } gap-6`}
+      >
         <div className="bg-gray-100 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <IoLocationOutline />
@@ -165,6 +169,26 @@ const BookingForm = () => {
             className="w-full bg-white border p-2 rounded-md text-gray-900"
           />
         </div>
+        {formData.type === "Round Trip" && (
+          <div className="bg-gray-100 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <IoCalendarClearOutline />
+              Return
+            </div>
+            <DatePicker
+              selected={
+                formData.returnDate ? new Date(formData.returnDate) : null
+              }
+              onChange={(date) =>
+                updateFormData({ returnDate: date?.toISOString() })
+              }
+              minDate={new Date()}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Select Date"
+              className="w-full bg-white border p-2 rounded-md text-gray-900"
+            />
+          </div>
+        )}
       </div>
       <button
         onClick={handleSubmit}

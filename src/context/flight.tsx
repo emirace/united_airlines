@@ -29,6 +29,7 @@ interface IFormData {
   from: string;
   to: string;
   date: string;
+  returnDate: string;
   flightId: string;
   travellersInfo: IPassenger[];
   email: string;
@@ -86,6 +87,7 @@ export const FlightProvider: React.FC<{ children: ReactNode }> = ({
     from: "",
     to: "",
     date: "",
+    returnDate: "",
     flightId: "",
     travellersInfo: [
       {

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFlight } from "../../../context/flight";
+import { CiImageOn } from "react-icons/ci";
 
 const countries = ["United States", "United Kingdom", "Canada", "India"];
 const titles = ["Mr", "Mrs", "Ms", "Dr"];
@@ -20,6 +21,16 @@ const months = [
 
 const PassengerForm: React.FC = () => {
   const { formData, updateFormData } = useFlight();
+  // const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]; // Get the first selected file
+    if (file) {
+      // setSelectedImage(file);
+      setPreviewUrl(URL.createObjectURL(file)); // Generate preview URL
+    }
+  };
 
   const handleChange = (id: number, field: string, value: any) => {
     updateFormData({
@@ -80,7 +91,7 @@ const PassengerForm: React.FC = () => {
           </div>
 
           {passenger.expanded && (
-            <div className="p-4 grid gap-4 grid-cols-2">
+            <div className="p-4 grid gap-4 grid-cols-1 md:grid-cols-2">
               {/* Title & Name */}
               <div>
                 <label className="block text-sm font-semibold">Title</label>
@@ -241,6 +252,29 @@ const PassengerForm: React.FC = () => {
                     handleChange(passenger.id, "passportExpiry", e.target.value)
                   }
                 />
+              </div>
+              <div>
+                <div className="block text-sm font-semibold">
+                  Passport Photo
+                </div>
+                <label htmlFor="image" className="cursor-pointer">
+                  {previewUrl ? (
+                    <img
+                      src={previewUrl}
+                      alt="Selected"
+                      className="w-40 h-40 object-cover rounded-lg border border-gray-300"
+                    />
+                  ) : (
+                    <CiImageOn className="text-9xl text-gray-500" />
+                  )}
+                  <input
+                    type="file"
+                    id="image"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={handleImageChange}
+                  />
+                </label>
               </div>
             </div>
           )}
