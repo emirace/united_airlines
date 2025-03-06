@@ -6,7 +6,8 @@ import axios, {
 import { getBackendErrorMessage } from "../utils/error";
 
 // export const baseURL = "http://172.20.10.2:3000";
-export const baseURL = "https://flyzone-backend.vercel.app";
+// export const baseURL = "https://flyzone-backend.vercel.app";
+export const baseURL = import.meta.env.VITE_BACKEND;
 export const imageUrl = baseURL;
 // export const imageUrl = baseURL;
 
