@@ -130,13 +130,23 @@ function Payment() {
       )}
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
         <BankTransfer
-          amount={flight?.price}
+          amount={
+            flight?.price && formData.type === "Round Trip"
+              ? flight?.price * 2
+              : flight?.price
+          }
           close={() => setModalOpen(false)}
         />
       </Modal>
 
       <Modal isOpen={showCrypto} onClose={() => setShowCrypto(false)}>
-        <CryptoPayment price={flight?.price}/>
+        <CryptoPayment
+          price={
+            flight?.price && formData.type === "Round Trip"
+              ? flight?.price * 2
+              : flight?.price
+          }
+        />
       </Modal>
 
       <Modal isOpen={showCard} onClose={() => setShowCard(false)}>

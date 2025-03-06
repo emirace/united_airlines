@@ -16,7 +16,12 @@ const FareSummary = ({ flight }: { flight: IFlight | null }) => {
           <span>
             Base Fare <span className="text-gray-400">ⓘ</span>
           </span>
-          <span className="font-medium">${flight?.price}</span>
+          <span className="font-medium">
+            $
+            {flight?.price && formData.type === "Round Trip"
+              ? flight?.price * 2
+              : flight?.price}
+          </span>
         </div>
 
         <div className="flex justify-between text-green-600">
@@ -33,7 +38,12 @@ const FareSummary = ({ flight }: { flight: IFlight | null }) => {
 
         <div className="flex justify-between font-bold text-lg">
           <span>Total Fare</span>
-          <span>${flight?.price}</span>
+          <span>
+            $
+            {flight?.price && formData.type === "Round Trip"
+              ? flight?.price * 2
+              : flight?.price}
+          </span>
         </div>
       </div>
 

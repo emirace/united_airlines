@@ -174,7 +174,9 @@ const UpdateForm = () => {
               Return
             </div>
             <DatePicker
-              selected={formData.date ? new Date(formData.date) : null}
+              selected={
+                formData.returnDate ? new Date(formData.returnDate) : null
+              }
               onChange={(date) =>
                 updateFormData({ returnDate: date?.toISOString() })
               }
