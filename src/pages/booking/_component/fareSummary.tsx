@@ -58,7 +58,7 @@ const FareSummary = ({ amount }: { amount: number }) => {
         <h2 className="text-lg font-bold">
           Cancellation & Date Change Charges
         </h2>
-        <p className="text-red-600 font-semibold">Non Refundable</p>
+        <p className="text-red-600 font-semibold">Refundable(Penalty Aplied)</p>
         <p className="text-gray-700 text-sm">
           The Cancellation penalty on this booking will depend on how close to
           the departure date you cancel your ticket. View fare rules to know

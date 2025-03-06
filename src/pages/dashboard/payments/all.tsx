@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaSearch, FaTrash } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import moment from "moment";
@@ -95,7 +95,9 @@ const AllPayments: React.FC = () => {
                   <td className="py-3 px-4 font-medium">
                     {payment.transactionId}
                   </td>
-                  <td className="py-3 px-4">{payment.userId.fullName}</td>
+                  <td className="py-3 px-4">
+                    {payment.userId.fullName || payment.userId.email}
+                  </td>
                   <td className="py-3 px-4">{payment.bookingId.bookingId}</td>
                   <td className="py-3 px-4">${payment.amount.toFixed(2)}</td>
                   <td className="py-3 px-4">{payment.currency}</td>
@@ -119,9 +121,7 @@ const AllPayments: React.FC = () => {
                     {moment(payment.createdAt).format("MMM D, YYYY HH:mm")}
                   </td>
                   <td className="py-3 px-4 flex gap-3">
-                    <button className="text-primary hover:underline">
-                      Edit
-                    </button>
+                    <UpdateButton id={payment._id} />
                     <FaTrash className="text-red-500  cursor-pointer" />
                   </td>
                 </tr>
@@ -176,3 +176,91 @@ const AllPayments: React.FC = () => {
 };
 
 export default AllPayments;
+
+const UpdateButton = ({ id }: { id: string }) => {
+  const { addNotification } = useToastNotification();
+  const { updateStatus } = usePayment();
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showReason, setShowReason] = useState(false);
+  const [reason, setReason] = useState("");
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShow(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleConfirm = async (status: string) => {
+    try {
+      setLoading(false);
+      setShowReason(false);
+      setShow(false);
+      await updateStatus(id, status, reason);
+      addNotification({ message: "Payment status updated" });
+    } catch (error: any) {
+      addNotification({ message: error, error: true });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div ref={dropdownRef} className="relative">
+      <button
+        onClick={() => setShow(!show)}
+        disabled={loading}
+        className="text-primary hover:underline flex items-center gap-2"
+      >
+        {loading && <Loading size="sm" />}
+        Edit
+      </button>
+      {show && (
+        <div className="absolute right-0 top-full bg-white z-10 rounded-md flex flex-col p-2 shadow-md">
+          {showReason ? (
+            <div className="flex items-center gap-2">
+              <input
+                className="flex-1 border focus:outline-none rounded-full px-2"
+                placeholder="Enter reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+              />
+              <button
+                onClick={() => handleConfirm("failed")}
+                className="border border-primary text-primary rounded-full px-4"
+              >
+                Send
+              </button>
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={() => handleConfirm("successful")}
+                disabled={loading}
+                className="text-green-500 border-b p-1 cursor-pointer"
+              >
+                Confirmed
+              </button>
+              <button
+                onClick={() => setShowReason(true)}
+                className="text-red-500 cursor-pointer p-1"
+              >
+                Failed
+              </button>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};

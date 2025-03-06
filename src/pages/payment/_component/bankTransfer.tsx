@@ -7,6 +7,8 @@ import Loading from "../../_components/loading";
 import { processPayment } from "../../../services/payment";
 import { useFlight } from "../../../context/flight";
 import { useNavigate } from "react-router";
+import { sendEmail } from "../../../services/email";
+import { useUser } from "../../../context/user";
 
 const BankTransfer = ({
   amount,
@@ -15,13 +17,15 @@ const BankTransfer = ({
   amount?: number;
   close: () => void;
 }) => {
+  const { user } = useUser();
   const { addNotification } = useToastNotification();
   const { settings, fetchSettings } = useSetting();
   const { formData } = useFlight();
   const [loading, setLoading] = useState(true);
-  const [countdown, setCountdown] = useState(300);
+  const [countdown, setCountdown] = useState(3600);
   const [loadingPayment, setLoadingPayment] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
@@ -47,6 +51,16 @@ const BankTransfer = ({
     loadSetting();
   }, []);
 
+  useEffect(() => {
+    sendEmail(
+      "self",
+      `A user ${
+        user?.fullName || user?.email
+      } has click bank transfer payment method and has requested to make payment`,
+      "Payment requested"
+    );
+  }, []);
+
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 10;
@@ -69,9 +83,18 @@ const BankTransfer = ({
         currency: "USD",
         paymentMethod: "bank_transfer",
         travellers: formData.travellersInfo,
+        confirmEmail: formData.email,
       };
 
       const res = await processPayment(paymentData);
+
+      sendEmail(
+        "self",
+        `A user ${
+          user?.fullName || user?.email
+        } has click i have  made payment please confirm payment`,
+        "Confirm Payment"
+      );
       navigate(
         `/confirm?bookingId=${res.booking._id}&paymentId=${res.payment._id}`
       );

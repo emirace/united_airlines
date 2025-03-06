@@ -29,12 +29,12 @@ const Footer = () => {
           <div className="flex gap-3 items-center">
             <img
               src={IMAGES.logo}
-              alt="United Airlines Logo"
+              alt="Flyzone Airlines Logo"
               className="w-10"
             />
-            <h2 className="text-lg font-semibold">United Airlines</h2>
+            <h2 className="text-lg font-semibold">Flyzone Airlines</h2>
           </div>
-          <p className=" text-sm mt-1">Copyrights ©2025 United Airlines.</p>
+          <p className=" text-sm mt-1">Copyrights ©2025 Flyzone Airlines.</p>
         </div>
 
         {/* Social Media Icons */}

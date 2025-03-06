@@ -21,6 +21,24 @@ const months = [
 const PassengerForm: React.FC = () => {
   const { formData, updateFormData } = useFlight();
 
+  const handleChange = (id: number, field: string, value: any) => {
+    updateFormData({
+      travellersInfo: formData.travellersInfo.map((passenger) =>
+        passenger.id === id ? { ...passenger, [field]: value } : passenger
+      ),
+    });
+  };
+
+  const handleDOBChange = (id: number, field: string, value: string) => {
+    updateFormData({
+      travellersInfo: formData.travellersInfo.map((passenger) =>
+        passenger.id === id
+          ? { ...passenger, dob: { ...passenger.dob, [field]: value } }
+          : passenger
+      ),
+    });
+  };
+
   const addPassenger = () => {
     updateFormData({
       travellersInfo: [
@@ -50,9 +68,9 @@ const PassengerForm: React.FC = () => {
   };
 
   return (
-    <div className="">
+    <div>
       {formData.travellersInfo.map((passenger) => (
-        <div key={passenger.id} className="mb-4 border rounded-md ">
+        <div key={passenger.id} className="mb-4 border rounded-md">
           <div
             className="flex justify-between items-center px-4 py-3 bg-gray-100 cursor-pointer"
             onClick={() => toggleExpand(passenger.id)}
@@ -66,7 +84,13 @@ const PassengerForm: React.FC = () => {
               {/* Title & Name */}
               <div>
                 <label className="block text-sm font-semibold">Title</label>
-                <select className="w-full p-2 border rounded-md">
+                <select
+                  className="w-full p-2 border rounded-md"
+                  value={passenger.title}
+                  onChange={(e) =>
+                    handleChange(passenger.id, "title", e.target.value)
+                  }
+                >
                   {titles.map((t) => (
                     <option key={t}>{t}</option>
                   ))}
@@ -81,6 +105,10 @@ const PassengerForm: React.FC = () => {
                     type="text"
                     className="w-full p-2 border rounded-md"
                     placeholder="First name"
+                    value={passenger.firstName}
+                    onChange={(e) =>
+                      handleChange(passenger.id, "firstName", e.target.value)
+                    }
                   />
                 </div>
                 <div className="flex-1">
@@ -91,6 +119,10 @@ const PassengerForm: React.FC = () => {
                     type="text"
                     className="w-full p-2 border rounded-md"
                     placeholder="Last name"
+                    value={passenger.lastName}
+                    onChange={(e) =>
+                      handleChange(passenger.id, "lastName", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -103,11 +135,21 @@ const PassengerForm: React.FC = () => {
                     type="number"
                     className="w-full p-2 border rounded-md"
                     placeholder="DD"
+                    value={passenger.dob.day}
+                    onChange={(e) =>
+                      handleDOBChange(passenger.id, "day", e.target.value)
+                    }
                   />
                 </div>
                 <div className="flex-1">
                   <label className="block text-sm font-semibold">Month</label>
-                  <select className="w-full p-2 border rounded-md">
+                  <select
+                    className="w-full p-2 border rounded-md"
+                    value={passenger.dob.month}
+                    onChange={(e) =>
+                      handleDOBChange(passenger.id, "month", e.target.value)
+                    }
+                  >
                     {months.map((m) => (
                       <option key={m}>{m}</option>
                     ))}
@@ -119,6 +161,10 @@ const PassengerForm: React.FC = () => {
                     type="number"
                     className="w-full p-2 border rounded-md"
                     placeholder="YYYY"
+                    value={passenger.dob.year}
+                    onChange={(e) =>
+                      handleDOBChange(passenger.id, "year", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -128,7 +174,13 @@ const PassengerForm: React.FC = () => {
                 <label className="block text-sm font-semibold">
                   Nationality
                 </label>
-                <select className="w-full p-2 border rounded-md">
+                <select
+                  className="w-full p-2 border rounded-md"
+                  value={passenger.nationality}
+                  onChange={(e) =>
+                    handleChange(passenger.id, "nationality", e.target.value)
+                  }
+                >
                   <option>Select Nationality</option>
                   {countries.map((c) => (
                     <option key={c}>{c}</option>
@@ -139,7 +191,17 @@ const PassengerForm: React.FC = () => {
                 <label className="block text-sm font-semibold">
                   Passport Issuing Country
                 </label>
-                <select className="w-full p-2 border rounded-md">
+                <select
+                  className="w-full p-2 border rounded-md"
+                  value={passenger.passportCountry}
+                  onChange={(e) =>
+                    handleChange(
+                      passenger.id,
+                      "passportCountry",
+                      e.target.value
+                    )
+                  }
+                >
                   <option>Select Country</option>
                   {countries.map((c) => (
                     <option key={c}>{c}</option>
@@ -152,17 +214,33 @@ const PassengerForm: React.FC = () => {
                 <label className="block text-sm font-semibold">
                   Passport Number
                 </label>
+
+                <div className="text-xs text-gray-400 ">
+                  Enter a valid passport number, this may affect your booking
+                  confirmation
+                </div>
                 <input
                   type="text"
                   className="w-full p-2 border rounded-md"
                   placeholder="Enter passport number"
+                  value={passenger.passportNumber}
+                  onChange={(e) =>
+                    handleChange(passenger.id, "passportNumber", e.target.value)
+                  }
                 />
               </div>
               <div>
                 <label className="block text-sm font-semibold">
                   Passport Expiry
                 </label>
-                <input type="date" className="w-full p-2 border rounded-md" />
+                <input
+                  type="date"
+                  className="w-full p-2 border rounded-md"
+                  value={passenger.passportExpiry}
+                  onChange={(e) =>
+                    handleChange(passenger.id, "passportExpiry", e.target.value)
+                  }
+                />
               </div>
             </div>
           )}

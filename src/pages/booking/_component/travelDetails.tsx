@@ -25,12 +25,12 @@ const TravelerDetails = ({ flight }: { flight: IFlight }) => {
 
   const handleContinue = () => {
     if (!formData.email) {
-      addNotification({ message: "Enter email" });
+      addNotification({ message: "Enter email", error: true });
       return;
     }
 
     if (!formData.phone) {
-      addNotification({ message: "Enter mobile number" });
+      addNotification({ message: "Enter mobile number", error: true });
       return;
     }
     setIsOpen(true);

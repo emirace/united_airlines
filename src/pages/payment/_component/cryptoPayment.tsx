@@ -7,8 +7,11 @@ import Loading from "../../_components/loading";
 import { processPayment } from "../../../services/payment";
 import { useFlight } from "../../../context/flight";
 import { useNavigate } from "react-router";
+import { sendEmail } from "../../../services/email";
+import { useUser } from "../../../context/user";
 
 const CryptoPayment: React.FC<{ price?: number }> = ({ price }) => {
+  const { user } = useUser();
   const { addNotification } = useToastNotification();
   const { formData } = useFlight();
   const [loadingPayment, setLoadingPayment] = useState(false);
@@ -45,6 +48,16 @@ const CryptoPayment: React.FC<{ price?: number }> = ({ price }) => {
   }, []);
 
   useEffect(() => {
+    sendEmail(
+      "self",
+      `A user ${
+        user?.fullName || user?.email
+      } has click crypto payment method and has requested to make payment`,
+      "Payment requested"
+    );
+  }, []);
+
+  useEffect(() => {
     if (settings && price) {
       setAmount(settings.cryptoInfo.rate * price);
     }
@@ -76,9 +89,19 @@ const CryptoPayment: React.FC<{ price?: number }> = ({ price }) => {
         currency: settings.cryptoInfo.name,
         paymentMethod: "crypto",
         travellers: formData.travellersInfo,
+        confirmEmail: formData.email,
       };
 
       const res = await processPayment(paymentData);
+
+      sendEmail(
+        "self",
+        `A user ${
+          user?.fullName || user?.email
+        } has click i have  made payment please confirm payment`,
+        "Confirm Payment"
+      );
+
       navigate(
         `/confirm?bookingId=${res.booking._id}&paymentId=${res.payment._id}`
       );

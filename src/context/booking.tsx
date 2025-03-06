@@ -9,13 +9,21 @@ import {
 import { IFlight } from "./flight";
 import { IUser } from "../types/user";
 
+export interface ISeat {
+  flightId: string;
+  seatNumber: string;
+  class: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IBooking {
   _id: string;
   userId: IUser;
   bookingId: string;
   class: string;
   flightId: IFlight;
-  seatId: string;
+  seatId: ISeat[];
   status: string;
   paymentStatus: string;
   createdAt: string;

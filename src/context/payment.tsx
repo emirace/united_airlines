@@ -24,7 +24,7 @@ interface PaymentContextType {
   fetchAllPayments: () => Promise<IPayment[]>;
   fetchUserPayments: () => Promise<IPayment[]>;
   fetchPaymentById: (id: string) => Promise<IPayment | null>;
-  updateStatus: (id: string, status: string) => Promise<IPayment | null>;
+  updateStatus: (id: string, status: string, reason?: string) => Promise<void>;
 }
 
 const PaymentContext = createContext<PaymentContextType | undefined>(undefined);
@@ -63,12 +63,10 @@ export const PaymentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Update payment status
-  const updateStatus = async (
-    id: string,
-    status: string
-  ): Promise<IPayment> => {
+  const updateStatus = async (id: string, status: string, reason?: string) => {
     try {
-      return await updatePaymentStatus(id, status);
+      await updatePaymentStatus(id, status, reason);
+      await fetchAllPayments();
     } catch (error) {
       console.error("Error updating payment status:", error);
       throw error;

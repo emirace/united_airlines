@@ -78,7 +78,7 @@ const FlightCard = ({ flight }: { flight: IFlight }) => {
         <p className="text-red-500 font-semibold">
           Only {flight.availableSeats} Seats Left
         </p>
-        <p className="text-gray-500">Non-Refundable</p>
+        <p className="text-gray-500">Refundable(Penalty applied)</p>
       </div>
     </div>
   );

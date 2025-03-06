@@ -9,6 +9,7 @@ interface ProcessPaymentParams {
   currency: string;
   paymentMethod: string;
   travellers: object[];
+  confirmEmail: string;
 }
 
 // Get all payments (Admin)
@@ -26,9 +27,13 @@ export const getPaymentById = async (id: string): Promise<IPayment> => {
 // Update payment status
 export const updatePaymentStatus = async (
   id: string,
-  status: string
+  status: string,
+  reason?: string
 ): Promise<IPayment> => {
-  const response = await api.put<IPayment>(`/payments/${id}`, { status });
+  const response = await api.put<IPayment>(`/payments/${id}`, {
+    status,
+    reason,
+  });
   return response.data;
 };
 

@@ -98,7 +98,9 @@ const AllBookings: React.FC = () => {
                   <td className="py-3 px-4">{booking.userId.fullName}</td>
                   <td className="py-3 px-4">{booking.flightId.flightNumber}</td>
                   <td className="py-3 px-4">{booking.class}</td>
-                  <td className="py-3 px-4">{booking.seatId}</td>
+                  <td className="py-3 px-4">
+                    {booking.seatId.map((seat) => seat.seatNumber).join(",")}
+                  </td>
                   <td className="py-3 px-4">
                     <span
                       className={`px-2 py-1 rounded-full text-white text-xs ${

@@ -18,6 +18,7 @@ import { IBooking } from "../context/booking";
 import { useToastNotification } from "../context/toastNotification";
 import moment from "moment";
 import Loading from "./_components/loading";
+import { Link } from "react-router";
 
 const BookingConfirmation = () => {
   const [searchParams] = useSearchParams();
@@ -50,16 +51,17 @@ const BookingConfirmation = () => {
   return (
     <div className="max-w-[75rem] mx-auto w-full px-4">
       <Navbar />
-      <div className="flex items-center justify-center w-full h-[80vh]">
+      <div className="flex items-center justify-center w-full py-24">
         {loading ? (
           <Loading />
         ) : (
           <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-3xl mx-auto text-lg text-gray-900">
             {/* Heading */}
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <span className="text-2xl">🎉</span>
-              <h2 className="text-4xl font-bold">Congratulations!</h2>
-              <span className="text-2xl">🎉</span>
+              <h2 className="text-4xl font-bold">Pending!</h2>
+            </div>
+            <div className="flex items-center justify-center text-xl w-full gap-4 mb-4">
+              <Loading size="sm" /> Confirming payment
             </div>
             <p className="text-gray-600 text-center mb-2">
               Your flight has been booked and an email wil be sent to you to
@@ -141,9 +143,13 @@ const BookingConfirmation = () => {
               {/* <button className="flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300">
                 <FaShare className="mr-2" /> Share
               </button> */}
-              <button className="flex items-center px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-indigo-700">
-                <FaRegFilePdf className="mr-2" /> Download PDF
-              </button>
+              <Link
+                to="/dashboard/bookings"
+                className="flex items-center px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-indigo-700"
+              >
+                {/* <FaRegFilePdf className="mr-2" />  */}
+                Go to Booking
+              </Link>
             </div>
           </div>
         )}
