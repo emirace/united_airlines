@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaSearch, FaTrash } from "react-icons/fa";
+import { FaSearch, FaTrash, FaEye } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import moment from "moment";
 import { usePayment, IPayment } from "../../../context/payment";
 import Loading from "../../_components/loading";
 import { useToastNotification } from "../../../context/toastNotification";
+import Modal from "../../_components/modal";
+import BookingDetails from "./_component/bookingDetail";
+import { IBooking } from "../../../context/booking";
 
 const AllPayments: React.FC = () => {
   const { fetchAllPayments } = usePayment();
@@ -14,6 +17,8 @@ const AllPayments: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [booking, setBooking] = useState<IBooking | null>(null);
 
   useEffect(() => {
     const loadPayments = async () => {
@@ -121,6 +126,13 @@ const AllPayments: React.FC = () => {
                     {moment(payment.createdAt).format("MMM D, YYYY HH:mm")}
                   </td>
                   <td className="py-3 px-4 flex gap-3">
+                    <FaEye
+                      className=" cursor-pointer"
+                      onClick={() => {
+                        setBooking(payment.bookingId);
+                        setIsOpen(true);
+                      }}
+                    />
                     <UpdateButton id={payment._id} />
                     <FaTrash className="text-red-500  cursor-pointer" />
                   </td>
@@ -171,6 +183,10 @@ const AllPayments: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <BookingDetails booking={booking!} />
+      </Modal>
     </div>
   );
 };
