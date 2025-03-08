@@ -19,6 +19,7 @@ import AllPayments from "./pages/dashboard/payments/all";
 import AllBookings from "./pages/dashboard/bookings/all";
 import Settings from "./pages/dashboard/settings";
 import Tracking from "./pages/tracking";
+import Message from "./pages/dashboard/message";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="flights" element={<Flights />} />
             <Route path="payments" element={<Payments />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="support" element={<Message />} />
             <Route path="all-payments" element={<AllPayments />} />
             <Route path="all-bookings" element={<AllBookings />} />
           </Route>

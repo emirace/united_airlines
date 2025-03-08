@@ -10,6 +10,7 @@ import Navbar from "./home/_components/navbar";
 import Footer from "./home/_components/footer";
 import IMAGES from "../assets/images";
 import { useSetting } from "../context/setting";
+import Support from "./_components/support";
 
 const Contact = () => {
   const { settings } = useSetting();
@@ -67,7 +68,7 @@ const Contact = () => {
               href={`mailto:${settings.mail.name || "example@gmail.com"}`}
               className="mt-4 text-blue-500 underline block"
             >
-              {settings.mail.name || "example@gmail.com"}
+              {settings.mail.name || "info@flyzoneairlines.com"}
             </a>
           </div>
 
@@ -176,6 +177,7 @@ const Contact = () => {
           </form>
         </div>
       </section>
+      <Support />
 
       <Footer />
     </div>

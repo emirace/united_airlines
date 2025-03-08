@@ -1,5 +1,12 @@
-import { IGetAllUsersResponse, IProfileData } from "../types/user";
+import {
+  IGetAllUsersResponse,
+  IGuestUser,
+  IProfileData,
+  IUser,
+} from "../types/user";
+import { getBackendErrorMessage } from "../utils/error";
 import api from "./api";
+import apiChat from "./apiChat";
 
 export const getUserProfile = async () => {
   const response = await api.get("/users");
@@ -36,3 +43,32 @@ export const fetchAllUsers = async (data: {
     throw error;
   }
 };
+
+export async function loginGuestService(userData: IGuestUser): Promise<IUser> {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response: { guestUser: any; status: boolean } = await apiChat.post(
+      `/users/login-guest`,
+      userData
+    );
+
+    console.log(response);
+    if (!response.status) {
+      // Handle all users error, e.g., display an error message to the user
+      throw new Error("Update failed: " + getBackendErrorMessage(response));
+    }
+    localStorage.setItem("guestUserEmail", userData.email);
+    localStorage.setItem("guestUserFullName", userData.fullName);
+    localStorage.setItem("authToken", response.guestUser.token);
+
+    return response.guestUser;
+  } catch (error) {
+    console.log(error);
+    // Handle network errors or other exceptions
+    // You can log the error or perform other error-handling actions
+    console.error("creating guest user error:", getBackendErrorMessage(error));
+
+    // Re-throw the error to propagate it up the call stack if needed
+    throw getBackendErrorMessage(error);
+  }
+}

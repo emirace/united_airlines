@@ -31,3 +31,8 @@ export interface IGetAllUsersResponse {
   currentPage: number;
   totalCount: number;
 }
+
+export interface IGuestUser {
+  fullName: string;
+  email: string;
+}

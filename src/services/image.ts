@@ -1,9 +1,9 @@
 import { getBackendErrorMessage } from "../utils/error";
-import api from "./api";
+import apiChat from "./apiChat";
 
 export const saveImageService = async (formData: FormData) => {
   try {
-    const response = await api.post("/images", formData, {
+    const response = await apiChat.post("/images", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

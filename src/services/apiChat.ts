@@ -5,22 +5,17 @@ import axios, {
 } from "axios";
 import { getBackendErrorMessage } from "../utils/error";
 
-// export const baseURL = "http://172.20.10.2:3000";
-// export const baseURL = "https://flyzone-backend.vercel.app";
-export const baseURL = import.meta.env.VITE_BACKEND;
-export const imageUrl = baseURL;
-export const messageUrl = "http://localhost:5000";
-// export const imageUrl = baseURL;
+export const baseChatURL = "http://localhost:5000";
 
-const api = axios.create({
-  baseURL: baseURL + "/api",
+const apiChat = axios.create({
+  baseURL: baseChatURL + "/api",
   // timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-api.interceptors.request.use(
+apiChat.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem("authToken");
     if (token) {
@@ -33,9 +28,9 @@ api.interceptors.request.use(
   }
 );
 
-api.interceptors.response.use(
+apiChat.interceptors.response.use(
   (response: AxiosResponse) => {
-    return response;
+    return response.data;
   },
   (error: AxiosError) => {
     if (error.response) {
@@ -49,4 +44,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default apiChat;

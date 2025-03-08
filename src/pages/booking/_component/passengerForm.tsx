@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useFlight } from "../../../context/flight";
 import { CiImageOn } from "react-icons/ci";
+import { compressImageUpload } from "../../../utils/image";
+import { useToastNotification } from "../../../context/toastNotification";
+import Loading from "../../_components/loading";
 
 const countries = ["United States", "United Kingdom", "Canada", "India"];
 const titles = ["Mr", "Mrs", "Ms", "Dr"];
@@ -21,16 +24,9 @@ const months = [
 
 const PassengerForm: React.FC = () => {
   const { formData, updateFormData } = useFlight();
+  const { addNotification } = useToastNotification();
   // const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; // Get the first selected file
-    if (file) {
-      // setSelectedImage(file);
-      setPreviewUrl(URL.createObjectURL(file)); // Generate preview URL
-    }
-  };
+  const [uploading, setUploading] = useState(false);
 
   const handleChange = (id: number, field: string, value: any) => {
     updateFormData({
@@ -76,6 +72,25 @@ const PassengerForm: React.FC = () => {
         p.id === id ? { ...p, expanded: !p.expanded } : p
       ),
     });
+  };
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    try {
+      setUploading(true);
+
+      const file = e.target.files?.[0];
+      if (!file) throw Error("No image found");
+
+      const imageUrl = await compressImageUpload(file, 1024);
+
+      updateFormData({ image: imageUrl });
+
+      addNotification({ message: "Image uploaded", error: true });
+    } catch (err) {
+      addNotification({ message: "Failed uploading image", error: true });
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -258,9 +273,9 @@ const PassengerForm: React.FC = () => {
                   Passport Photo
                 </div>
                 <label htmlFor="image" className="cursor-pointer">
-                  {previewUrl ? (
+                  {formData.image ? (
                     <img
-                      src={previewUrl}
+                      src={formData.image}
                       alt="Selected"
                       className="w-40 h-40 object-cover rounded-lg border border-gray-300"
                     />
@@ -272,9 +287,10 @@ const PassengerForm: React.FC = () => {
                     id="image"
                     accept="image/*"
                     className="sr-only"
-                    onChange={handleImageChange}
+                    onChange={handleImageUpload}
                   />
                 </label>
+                {uploading && <Loading size="sm" />}
               </div>
             </div>
           )}

@@ -10,6 +10,7 @@ import { MdFlightTakeoff } from "react-icons/md";
 import { useUser } from "../../../context/user";
 import { useNavigate } from "react-router";
 import { FaCreditCard } from "react-icons/fa";
+import { RiCustomerService2Fill } from "react-icons/ri";
 
 const sidebars = [
   { name: "Profile", icon: HiOutlineUser, path: "profile" },
@@ -22,6 +23,7 @@ const adminSidebars = [
   { name: "Flights", icon: MdFlightTakeoff, path: "flights" },
   { name: "All Bookings", icon: HiOutlineTicket, path: "all-bookings" },
   { name: "All Payments", icon: FaCreditCard, path: "all-payments" },
+  { name: "Support", icon: RiCustomerService2Fill, path: "support" },
   { name: "Settings", icon: HiOutlineCog, path: "settings" },
 ];
 

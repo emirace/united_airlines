@@ -8,12 +8,14 @@ const CryptoInfo = () => {
   const { settings, fetchSettings, updateSettinngs } = useSetting();
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    network: "",
-    address: "",
-    rate: 0,
-  });
+  const [formData, setFormData] = useState([
+    {
+      name: "",
+      network: "",
+      address: "",
+      rate: 0,
+    },
+  ]);
 
   useEffect(() => {
     setFormData(settings.cryptoInfo);
@@ -37,14 +39,34 @@ const CryptoInfo = () => {
     loadSetting();
   }, []);
 
-  const handleChange = (e: { target: { name: any; value: any } }) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = event.target;
+
+    setFormData((prevData) =>
+      prevData.map((item, i) =>
+        i === index
+          ? {
+              ...item,
+              [name]: name === "rate" ? parseFloat(value) || 0 : value,
+            }
+          : item
+      )
+    );
   };
 
   const handleUpdate = async () => {
-    if (!formData.name || !formData.network || !formData.address) {
+    if (
+      !formData.length ||
+      formData.some(
+        (crypto) =>
+          !crypto.name || !crypto.network || !crypto.address || !crypto.rate
+      )
+    ) {
       addNotification({
-        message: "All fields are required.",
+        message: "All fields in cryptoInfo are required.",
         error: true,
       });
       return;
@@ -64,6 +86,13 @@ const CryptoInfo = () => {
     }
   };
 
+  const addNewCurrency = () => {
+    setFormData((prevData) => [
+      ...prevData,
+      { name: "", network: "", address: "", rate: 0 },
+    ]);
+  };
+
   return (
     <div className="border  rounded-lg  w-full ">
       <div className="p-6 border-b">
@@ -72,51 +101,64 @@ const CryptoInfo = () => {
           Update your crypto information
         </span>
       </div>
-      <div className="p-6">
-        <div>
-          <label className="block text-gray-600">
-            Enter your currency name
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-600">Enter your network</label>
-          <input
-            type="text"
-            name="network"
-            value={formData.network}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-          />
-        </div>
+      <div className="p-6 ">
+        {formData.map((data, index) => (
+          <div key={index} className="py-6 border-b border-primary">
+            <div>
+              <label className="block text-gray-600">
+                Enter your currency name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={data.name}
+                onChange={(e) => handleChange(index, e)}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
 
-        <div>
-          <label className="block text-gray-600">Enter wallet address</label>
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-          />
-        </div>
+            <div>
+              <label className="block text-gray-600">Enter your network</label>
+              <input
+                type="text"
+                name="network"
+                value={data.network}
+                onChange={(e) => handleChange(index, e)}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
 
-        <div>
-          <label className="block text-gray-600">Rate per dollar($)</label>
-          <input
-            type="number"
-            name="rate"
-            value={formData.rate}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-          />
-        </div>
+            <div>
+              <label className="block text-gray-600">
+                Enter wallet address
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={data.address}
+                onChange={(e) => handleChange(index, e)}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-600">Rate per dollar($)</label>
+              <input
+                type="number"
+                name="rate"
+                value={data.rate}
+                onChange={(e) => handleChange(index, e)}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
+          </div>
+        ))}
+        <button
+          onClick={addNewCurrency}
+          className="mt-4 px-4 py-2 border-primary text-primary rounded-lg"
+        >
+          Add Currency
+        </button>
 
         <div className="flex justify-end">
           <button

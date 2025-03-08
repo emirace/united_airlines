@@ -19,7 +19,7 @@ export interface ISetting {
     network: string;
     address: string;
     rate: number;
-  };
+  }[];
   mail: {
     name: string;
     password: string;
@@ -43,12 +43,14 @@ export const SettingProvider: React.FC<Props> = ({ children }) => {
       accountName: "",
       bankName: "",
     },
-    cryptoInfo: {
-      name: "",
-      network: "",
-      address: "",
-      rate: 0,
-    },
+    cryptoInfo: [
+      {
+        name: "",
+        network: "",
+        address: "",
+        rate: 0,
+      },
+    ],
     mail: {
       name: "",
       password: "",

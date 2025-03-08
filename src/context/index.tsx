@@ -6,6 +6,7 @@ import { AirportProvider } from "./airport";
 import { BookingProvider } from "./booking";
 import { PaymentProvider } from "./payment";
 import { SettingProvider } from "./setting";
+import MessageProvider from "./message";
 
 function Providers({ children }: { children: ReactNode }) {
   return (
@@ -15,7 +16,9 @@ function Providers({ children }: { children: ReactNode }) {
           <BookingProvider>
             <PaymentProvider>
               <SettingProvider>
-                <FlightProvider>{children}</FlightProvider>
+                <MessageProvider>
+                  <FlightProvider>{children}</FlightProvider>
+                </MessageProvider>
               </SettingProvider>
             </PaymentProvider>
           </BookingProvider>

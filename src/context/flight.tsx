@@ -35,6 +35,7 @@ interface IFormData {
   email: string;
   phone: string;
   seats: string[];
+  image: string;
 }
 
 export interface IFlight {
@@ -106,6 +107,7 @@ export const FlightProvider: React.FC<{ children: ReactNode }> = ({
     email: user?.email || "",
     phone: "",
     seats: [],
+    image: "",
   });
 
   const updateFormData = (value: Partial<IFormData>) => {
