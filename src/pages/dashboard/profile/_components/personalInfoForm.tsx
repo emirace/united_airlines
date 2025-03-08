@@ -4,6 +4,7 @@ import { useUser } from "../../../../context/user";
 import { useToastNotification } from "../../../../context/toastNotification";
 import Loading from "../../../_components/loading";
 import { compressImageUpload } from "../../../../utils/image";
+import { baseChatURL } from "../../../../services/apiChat";
 
 const PersonalInfoForm = () => {
   const { user, updateUser } = useUser();
@@ -16,7 +17,7 @@ const PersonalInfoForm = () => {
     dob: user?.dob || "",
     gender: user?.gender || "",
     address: user?.address || "",
-    image: "",
+    image: user?.image || "",
   });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -69,7 +70,7 @@ const PersonalInfoForm = () => {
 
       setFormData((prev) => ({ ...prev, image: imageUrl }));
 
-      addNotification({ message: "Image uploaded", error: true });
+      addNotification({ message: "Image uploaded" });
     } catch (err) {
       addNotification({ message: "Failed uploading image", error: true });
     } finally {
@@ -88,7 +89,7 @@ const PersonalInfoForm = () => {
         </label>
         <div className="flex items-center gap-4 mb-4">
           <img
-            src={formData.image}
+            src={baseChatURL + formData.image}
             alt="Profile"
             className="w-16 h-16 rounded-full object-cover bg-black"
           />

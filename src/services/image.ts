@@ -9,7 +9,7 @@ export const saveImageService = async (formData: FormData) => {
       },
     });
     console.log(response);
-    return response.data.imageUrl;
+    return (response as any).imageUrl;
   } catch (error) {
     // Handle network errors or other exceptions
     // You can log the error or perform other error-handling actions
@@ -18,4 +18,10 @@ export const saveImageService = async (formData: FormData) => {
     // Re-throw the error to propagate it up the call stack if needed
     throw getBackendErrorMessage(error);
   }
+};
+
+export const ping = async () => {
+  const response = await apiChat.get("/images");
+  console.log(response);
+  return response;
 };

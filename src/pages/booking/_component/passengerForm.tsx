@@ -4,6 +4,7 @@ import { CiImageOn } from "react-icons/ci";
 import { compressImageUpload } from "../../../utils/image";
 import { useToastNotification } from "../../../context/toastNotification";
 import Loading from "../../_components/loading";
+import { baseChatURL } from "../../../services/apiChat";
 
 const countries = ["United States", "United Kingdom", "Canada", "India"];
 const titles = ["Mr", "Mrs", "Ms", "Dr"];
@@ -275,7 +276,7 @@ const PassengerForm: React.FC = () => {
                 <label htmlFor="image" className="cursor-pointer">
                   {formData.image ? (
                     <img
-                      src={formData.image}
+                      src={baseChatURL + formData.image}
                       alt="Selected"
                       className="w-40 h-40 object-cover rounded-lg border border-gray-300"
                     />

@@ -1,5 +1,6 @@
 import React from "react";
 import { IBooking } from "../../../../context/booking";
+import { baseChatURL } from "../../../../services/apiChat";
 
 interface BookingDetailsProps {
   booking?: IBooking;
@@ -75,6 +76,10 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({ booking }) => {
         <div className="space-y-4">
           {booking?.travellers.map((traveller: any, index) => (
             <div key={index} className="p-4 border rounded-lg bg-white shadow">
+              <img
+                src={baseChatURL + traveller.image}
+                className="object-contain "
+              />
               <p>
                 <strong>Name:</strong> {traveller.title} {traveller.firstName}{" "}
                 {traveller.lastName}
