@@ -19,6 +19,7 @@ import { useToastNotification } from "../context/toastNotification";
 import moment from "moment";
 import Loading from "./_components/loading";
 import { Link } from "react-router";
+import socket from "../socket";
 
 const BookingConfirmation = () => {
   const [searchParams] = useSearchParams();
@@ -28,6 +29,8 @@ const BookingConfirmation = () => {
   const [booking, setBooking] = useState<IBooking | null>(null);
   const [payment, setPayment] = useState<IPayment | null>(null);
   const [loading, setLoading] = useState(true);
+  const [confirming, setConfirming] = useState(true);
+  const [status, setStatus] = useState("pending");
 
   useEffect(() => {
     const loadData = async () => {
@@ -46,7 +49,17 @@ const BookingConfirmation = () => {
       }
     };
     loadData();
-  }, [bookingId, paymentId]);
+  }, [bookingId, paymentId, status]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("update-payment", ({ id, status }) => {
+      if (id === payment?._id) {
+        setConfirming(false);
+        setStatus(status);
+      }
+    });
+  }, []);
 
   return (
     <div className="max-w-[75rem] mx-auto w-full px-4">
@@ -58,11 +71,17 @@ const BookingConfirmation = () => {
           <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-3xl mx-auto text-lg text-gray-900">
             {/* Heading */}
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <h2 className="text-4xl font-bold">Pending!</h2>
+              <h2 className="text-4xl font-bold capitalize">{status}!</h2>
             </div>
-            <div className="flex items-center justify-center text-xl w-full gap-4 mb-4">
-              <Loading size="sm" /> Confirming payment
-            </div>
+            {confirming ? (
+              <div className="flex items-center justify-center text-xl w-full gap-4 mb-4">
+                <Loading size="sm" /> Confirming payment
+              </div>
+            ) : (
+              <div className="flex items-center justify-center text-xl w-full gap-4 mb-4">
+                Payment {status}
+              </div>
+            )}
             <p className="text-gray-600 text-center mb-2">
               Your flight has been booked and an email wil be sent to you to
               confirm your booking when payment is confirmed

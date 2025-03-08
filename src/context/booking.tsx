@@ -27,7 +27,7 @@ export interface IBooking {
   status: string;
   paymentStatus: string;
   createdAt: string;
-  travellers: object[];
+  travellers: any[];
 }
 
 interface BookingContextType {

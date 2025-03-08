@@ -21,6 +21,15 @@ export const getBookingById = async (id: string): Promise<IBooking> => {
   return response.data;
 };
 
+export const getBookingByBookingId = async (
+  bookingId: string
+): Promise<IBooking> => {
+  const response = await api.post<IBooking>(`${"/bookings/track"}`, {
+    bookingId,
+  });
+  return response.data;
+};
+
 // Cancel a booking
 export const cancelBooking = async (id: string): Promise<IBooking> => {
   const response = await api.put<IBooking>(`${"/bookings"}/${id}/cancel`);

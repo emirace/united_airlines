@@ -21,14 +21,16 @@ const Sidebar: React.FC<Props> = ({ setIsSidebarOpen }) => {
   } = useMessage();
 
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const filteredConversations = conversations.filter((conversation) =>
-    conversation.otherUser?.fullName
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
+  const filteredConversations = conversations.filter(
+    (conversation) =>
+      conversation?.otherUser?.fullName &&
+      conversation.otherUser?.fullName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="flex-1 bg-primary/5 ">
+    <div className="flex-1 bg-white md:bg-primary/5 ">
       <div className="p-4">
         {/* Sidebar content */}
         <h2 className="text-lg font-semibold mb-4">{currentTab}s</h2>
