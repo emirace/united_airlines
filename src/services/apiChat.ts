@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 import { getBackendErrorMessage } from "../utils/error";
 
-export const baseChatURL = "http://localhost:5000";
+export const baseChatURL = import.meta.env.VITE_BACKEND2;
 
 const apiChat = axios.create({
   baseURL: baseChatURL + "/api",
