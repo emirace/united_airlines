@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { FaShieldAlt } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import { CgChevronLeft } from "react-icons/cg";
 import { IoMdClose } from "react-icons/io";
