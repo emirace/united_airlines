@@ -9,7 +9,7 @@ import {
 import { IAirport } from "./airport";
 import { useUser } from "./user";
 
-interface IPassenger {
+export interface IPassenger {
   id: number;
   title: string;
   firstName: string;

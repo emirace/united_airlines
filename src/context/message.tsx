@@ -64,7 +64,7 @@ export const MessageProvider: React.FC<Props> = ({ children }) => {
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
   const [currentConversation, setCurrentConversation] =
     useState<IConversation | null>(null);
-  const [currentTab, setCurrentTab] = useState<string>("Chat");
+  const [currentTab, setCurrentTab] = useState<string>("Support");
   const [isTypingList, setIsTypingList] = useState<
     { value: boolean; id: string }[]
   >([]);

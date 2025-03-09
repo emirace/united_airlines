@@ -5,8 +5,8 @@ import { compressImageUpload } from "../../../utils/image";
 import { useToastNotification } from "../../../context/toastNotification";
 import Loading from "../../_components/loading";
 import { baseChatURL } from "../../../services/apiChat";
+import CountrySelect from "./countrySelect";
 
-const countries = ["United States", "United Kingdom", "Canada", "India"];
 const titles = ["Mr", "Mrs", "Ms", "Dr"];
 const months = [
   "January",
@@ -195,45 +195,26 @@ const PassengerForm: React.FC = () => {
                   />
                 </div>
               </div>
-
-              {/* Nationality & Passport */}
               <div>
                 <label className="block text-sm font-semibold">
                   Nationality
                 </label>
-                <select
-                  className="w-full p-2 border rounded-md"
-                  value={passenger.nationality}
-                  onChange={(e) =>
-                    handleChange(passenger.id, "nationality", e.target.value)
-                  }
-                >
-                  <option>Select Nationality</option>
-                  {countries.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
+                <CountrySelect
+                  passenger={passenger}
+                  id="nationality"
+                  handleChange={handleChange}
+                />
               </div>
+
               <div>
                 <label className="block text-sm font-semibold">
                   Passport Issuing Country
                 </label>
-                <select
-                  className="w-full p-2 border rounded-md"
-                  value={passenger.passportCountry}
-                  onChange={(e) =>
-                    handleChange(
-                      passenger.id,
-                      "passportCountry",
-                      e.target.value
-                    )
-                  }
-                >
-                  <option>Select Country</option>
-                  {countries.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
+                <CountrySelect
+                  passenger={passenger}
+                  id="passportCountry"
+                  handleChange={handleChange}
+                />
               </div>
 
               {/* Passport Details */}
