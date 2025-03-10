@@ -111,10 +111,7 @@ const TravelerDetails = ({ flight }: { flight: IFlight }) => {
       </button>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <FlightSeatSelection
-          bookedSeats={bookedSeats}
-          onSubmit={handleSubmit}
-        />
+        <FlightSeatSelection onSubmit={handleSubmit} />
       </Modal>
     </div>
   );

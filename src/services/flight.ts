@@ -19,6 +19,11 @@ export const getFlightById = async (id: string): Promise<IFlight> => {
   return response.data;
 };
 
+export const getSeats = async (id: string): Promise<any> => {
+  const response = await api.get<IFlight>(`/flights/${id}/seat`);
+  return response.data;
+};
+
 export const updateFlight = async (
   id: string,
   flightData: Partial<IFlight>

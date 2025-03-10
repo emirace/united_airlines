@@ -24,6 +24,11 @@ export const getPaymentById = async (id: string): Promise<IPayment> => {
   return response.data;
 };
 
+export const getPaymentByToken = async (token: string): Promise<IPayment> => {
+  const response = await api.get<IPayment>(`/payments/token/${token}`);
+  return response.data;
+};
+
 // Update payment status
 export const updatePaymentStatus = async (
   id: string,
@@ -37,6 +42,16 @@ export const updatePaymentStatus = async (
   return response.data;
 };
 
+export const updatePaymentImage = async (
+  token: string,
+  image: string
+): Promise<IPayment> => {
+  const response = await api.put<IPayment>(`/payments/token/${token}`, {
+    image,
+  });
+  return response.data;
+};
+
 export const getUserPayments = async (): Promise<IPayment[]> => {
   const response = await api.get<IPayment[]>(`/payments/user`);
   return response.data;
@@ -44,5 +59,12 @@ export const getUserPayments = async (): Promise<IPayment[]> => {
 
 export const processPayment = async (paymentData: ProcessPaymentParams) => {
   const response = await api.post("/payments", paymentData);
+  return response.data;
+};
+
+export const generatePaymentLink = async (
+  paymentData: ProcessPaymentParams
+) => {
+  const response = await api.post("/payments/generate", paymentData);
   return response.data;
 };

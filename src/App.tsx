@@ -20,6 +20,7 @@ import AllBookings from "./pages/dashboard/bookings/all";
 import Settings from "./pages/dashboard/settings";
 import Tracking from "./pages/tracking";
 import Message from "./pages/dashboard/message";
+import BookingPayment from "./pages/payment/booking";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/payment" element={<Payment />} />
+          <Route path="/payment/:paymentId" element={<BookingPayment />} />
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="profile" element={<Profile />} />
             <Route path="bookings" element={<Bookings />} />

@@ -56,7 +56,7 @@ const BankTransfer = ({
       "self",
       `A user ${
         user?.fullName || user?.email
-      } has click bank transfer payment method and has requested to make payment`,
+      } has click mobile transfer payment method and has requested to make payment`,
       "Payment requested"
     );
   }, []);

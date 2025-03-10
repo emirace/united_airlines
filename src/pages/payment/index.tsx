@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Modal from "../_components/modal";
 import Navbar from "../home/_components/navbar";
 import FareSummary from "./_component/fareSummary";
-import { CiBank } from "react-icons/ci";
+import { CiBank, CiPhone } from "react-icons/ci";
 import { FaCreditCard } from "react-icons/fa6";
 import { MdCurrencyBitcoin } from "react-icons/md";
 import Footer from "../home/_components/footer";
@@ -12,6 +12,7 @@ import Loading from "../_components/loading";
 import { useNavigate } from "react-router";
 import CryptoPayment from "./_component/cryptoPayment";
 import CardPayment from "./_component/cardPayment";
+import LinkTransfer from "./_component/LinkTransfer";
 
 function Payment() {
   const { getFlight, formData } = useFlight();
@@ -22,6 +23,7 @@ function Payment() {
   const [showCrypto, setShowCrypto] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const navigate = useNavigate();
+  const [linkTransfer, setLinkTransfer] = useState(false);
 
   useEffect(() => {
     const loadFlight = async () => {
@@ -62,6 +64,25 @@ function Payment() {
               {/* Bank Transfer Option */}
               <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between p-5 rounded-xl border">
                 <div className="flex items-start gap-4">
+                  <CiPhone size={40} />
+                  <div>
+                    <div className="text-2xl font-bold">Mobile Transfer</div>
+                    <p className="text-gray-500 text-sm">
+                      Securely transfer funds directly from your mobile bank
+                      account.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="bg-primary px-6 text-white font-semibold py-3 rounded-md hover:bg-opacity-70 transition"
+                >
+                  Proceed To Payment
+                </button>
+              </div>
+              <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between p-5 rounded-xl border">
+                <div className="flex items-start gap-4">
                   <CiBank size={40} />
                   <div>
                     <div className="text-2xl font-bold">Bank Transfer</div>
@@ -72,7 +93,7 @@ function Payment() {
                 </div>
 
                 <button
-                  onClick={() => setModalOpen(true)}
+                  onClick={() => setLinkTransfer(true)}
                   className="bg-primary px-6 text-white font-semibold py-3 rounded-md hover:bg-opacity-70 transition"
                 >
                   Proceed To Payment
@@ -136,6 +157,17 @@ function Payment() {
               : flight?.price
           }
           close={() => setModalOpen(false)}
+        />
+      </Modal>
+
+      <Modal isOpen={linkTransfer} onClose={() => setLinkTransfer(false)}>
+        <LinkTransfer
+          amount={
+            flight?.price && formData.type === "Round Trip"
+              ? flight?.price * 2
+              : flight?.price
+          }
+          close={() => setLinkTransfer(false)}
         />
       </Modal>
 
