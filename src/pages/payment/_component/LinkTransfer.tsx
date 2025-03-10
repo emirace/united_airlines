@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { FaRegCopy } from "react-icons/fa";
 import { useToastNotification } from "../../../context/toastNotification";
-import { useSetting } from "../../../context/setting";
 import Loading from "../../_components/loading";
 import { generatePaymentLink } from "../../../services/payment";
 import { useFlight } from "../../../context/flight";
-import { Link, useNavigate } from "react-router";
-// import { sendEmail } from "../../../services/email";
+import { Link } from "react-router";
+import { sendEmail } from "../../../services/email";
 import { useUser } from "../../../context/user";
 
 const LinkTransfer = ({
@@ -18,39 +17,22 @@ const LinkTransfer = ({
 }) => {
   const { user } = useUser();
   const { addNotification } = useToastNotification();
-  const { settings, fetchSettings } = useSetting();
   const { formData } = useFlight();
   const [loading, setLoading] = useState(true);
   const [link, setLink] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const loadSetting = async () => {
-      try {
-        setLoading(true);
-
-        await fetchSettings();
-      } catch (error: any) {
-        addNotification({
-          message: error || "An error occurred while updating your profile.",
-          error: true,
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadSetting();
     handlePayment();
   }, []);
 
   useEffect(() => {
-    // sendEmail(
-    //   "self",
-    //   `A user ${
-    //     user?.fullName || user?.email
-    //   } has click bank transfer payment method and has requested to make payment`,
-    //   "Payment requested"
-    // );
+    sendEmail(
+      "self",
+      `A user ${
+        user?.fullName || user?.email
+      } has click bank transfer payment method and has requested to make payment`,
+      "Payment requested"
+    );
   }, []);
 
   const copyToClipboard = (text: string) => {
@@ -60,6 +42,7 @@ const LinkTransfer = ({
 
   const handlePayment = async () => {
     try {
+      setLoading(true);
       const paymentData = {
         seatNumber: formData.seats,
         flightId: formData.flightId,
@@ -80,6 +63,8 @@ const LinkTransfer = ({
         error: true,
       });
       close();
+    } finally {
+      setLoading(false);
     }
   };
 

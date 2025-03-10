@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { IFlight, useFlight } from "../../../context/flight";
 import { useUser } from "../../../context/user";
@@ -7,19 +7,19 @@ import FlightSeatSelection from "./flightSeatSelection";
 import PassengerForm from "./passengerForm";
 import { useToastNotification } from "../../../context/toastNotification";
 
-const getRandomSeats = (count: number): string[] => {
-  const allSeats: string[] = [];
+// const getRandomSeats = (count: number): string[] => {
+//   const allSeats: string[] = [];
 
-  for (let row = 1; row <= 6; row++) {
-    for (let col = 1; col <= 4; col++) {
-      allSeats.push(`${String.fromCharCode(65 + row - 1)}${col}`); // "A1", "B2", ...
-    }
-  }
+//   for (let row = 1; row <= 6; row++) {
+//     for (let col = 1; col <= 4; col++) {
+//       allSeats.push(`${String.fromCharCode(65 + row - 1)}${col}`); // "A1", "B2", ...
+//     }
+//   }
 
-  // Shuffle seats and pick the first 'count' as booked
-  const shuffledSeats = allSeats.sort(() => 0.5 - Math.random());
-  return shuffledSeats.slice(0, count);
-};
+//   // Shuffle seats and pick the first 'count' as booked
+//   const shuffledSeats = allSeats.sort(() => 0.5 - Math.random());
+//   return shuffledSeats.slice(0, count);
+// };
 
 const TravelerDetails = ({ flight }: { flight: IFlight }) => {
   const navigate = useNavigate();
@@ -27,11 +27,6 @@ const TravelerDetails = ({ flight }: { flight: IFlight }) => {
   const { user } = useUser();
   const { formData, updateFormData } = useFlight();
   const [isOpen, setIsOpen] = useState(false);
-  const [bookedSeats, setBookedSeats] = useState<string[]>([]);
-
-  useEffect(() => {
-    setBookedSeats(getRandomSeats(5));
-  }, []);
 
   const handleSubmit = async (selectedSeats: string[]) => {
     updateFormData({ seats: selectedSeats });
