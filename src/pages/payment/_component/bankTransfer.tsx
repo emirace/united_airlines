@@ -145,7 +145,12 @@ const BankTransfer = ({
 
         <p className="text-sm text-gray-500 mt-3">Account name</p>
         <p className="font-semibold">{settings.bankingInfo.accountName}</p>
+        
+        <p className="text-sm text-gray-500 mt-3">Routing</p>
+        <p className="font-semibold">{settings.bankingInfo.routing}</p>
 
+        <p className="text-sm text-gray-500 mt-3">Address</p>
+        <p className="font-semibold">{settings.bankingInfo.address}</p>
         <div className="flex justify-between items-center mt-3">
           <div>
             <p className="text-sm text-gray-500">Bank name</p>

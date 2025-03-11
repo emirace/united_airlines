@@ -11,54 +11,53 @@ import Navbar from "./home/_components/navbar";
 import Footer from "./home/_components/footer";
 import { useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
-import { getBookingById } from "../services/booking";
 import { getPaymentById } from "../services/payment";
 import { IPayment } from "../context/payment";
-import { IBooking } from "../context/booking";
 import { useToastNotification } from "../context/toastNotification";
 import moment from "moment";
 import Loading from "./_components/loading";
 import { Link } from "react-router";
-import socket from "../socket";
 
 const BookingConfirmation = () => {
   const [searchParams] = useSearchParams();
   const { addNotification } = useToastNotification();
-  const bookingId = searchParams.get("bookingId");
   const paymentId = searchParams.get("paymentId");
-  const [booking, setBooking] = useState<IBooking | null>(null);
   const [payment, setPayment] = useState<IPayment | null>(null);
   const [loading, setLoading] = useState(true);
   const [confirming, setConfirming] = useState(true);
   const [status, setStatus] = useState("pending");
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        if (bookingId && paymentId) {
-          setLoading(true);
-          const res = await getBookingById(bookingId);
-          const res2 = await getPaymentById(paymentId);
-          setBooking(res);
-          setPayment(res2);
+  const loadData = async () => {
+    try {
+      if (paymentId) {
+        const res = await getPaymentById(paymentId);
+        setPayment(res);
+        setStatus(payment?.status || "pending");
+        if (payment?.status !== "pending") {
+          setConfirming(false);
+        } else {
+          setConfirming(true);
         }
-      } catch (error: any) {
-        addNotification({ message: error, error: true });
-      } finally {
-        setLoading(false);
       }
-    };
-    loadData();
-  }, [bookingId, paymentId, status]);
+    } catch (error: any) {
+      addNotification({ message: error, error: true });
+    }
+  };
 
   useEffect(() => {
-    if (!socket) return;
-    socket.on("update-payment", ({ id, status }) => {
-      if (id === payment?._id) {
-        setConfirming(false);
-        setStatus(status);
-      }
-    });
+    const fetchData = async () => {
+      setLoading(true);
+      await loadData();
+      setLoading(false);
+    };
+    fetchData();
+  }, [paymentId]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      loadData();
+    }, 10000);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -87,19 +86,19 @@ const BookingConfirmation = () => {
               confirm your booking when payment is confirmed
             </p>
             <h3 className="text-xl font-bold text-center text-primary mb-4">
-              {booking?.flightId.origin.city} to{" "}
-              {booking?.flightId.destination.city}
+              {payment?.bookingId?.flightId.origin.city} to{" "}
+              {payment?.bookingId?.flightId.destination.city}
             </h3>
 
             {/* Booking Details */}
-            <div className="grid grid-cols-2 gap-20 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mt-6">
               <div className="">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <FaRegIdBadge className="text-gray-600" />
                     <span>Booking ID:</span>
                   </div>
-                  <span>{booking?.bookingId}</span>
+                  <span>{payment?.bookingId?.bookingId}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
@@ -107,7 +106,7 @@ const BookingConfirmation = () => {
                     <span>Booked by:</span>
                   </div>
                   <span className="font-semibold">
-                    {booking?.userId.fullName}
+                    {payment?.bookingId?.userId?.fullName}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -136,7 +135,10 @@ const BookingConfirmation = () => {
                     <FaRegCalendar className="text-gray-600" />
                     <span>Date Booked:</span>
                   </div>
-                  <span>{moment(booking?.createdAt).calendar()}</span>
+                  <span>
+                    {payment &&
+                      moment(payment?.bookingId?.createdAt).calendar()}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
@@ -144,7 +146,10 @@ const BookingConfirmation = () => {
                     <span>Departure Date:</span>
                   </div>
                   <span>
-                    {moment(booking?.flightId?.departureTime).calendar()}
+                    {payment &&
+                      moment(
+                        payment?.bookingId?.flightId?.departureTime
+                      ).calendar()}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -152,7 +157,7 @@ const BookingConfirmation = () => {
                     <FaUsers className="text-gray-600" />
                     <span>Guests:</span>
                   </div>
-                  <span>{booking?.travellers.length}</span>
+                  <span>{payment?.bookingId?.travellers.length}</span>
                 </div>
               </div>
             </div>

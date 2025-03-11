@@ -13,6 +13,8 @@ export interface ISetting {
     accountNumber: string;
     accountName: string;
     bankName: string;
+    routing: string;
+    address: string;
   };
   cryptoInfo: {
     name: string;
@@ -23,6 +25,9 @@ export interface ISetting {
   mail: {
     name: string;
     password: string;
+  };
+  cashApp: {
+    tag: string;
   };
 }
 
@@ -42,6 +47,8 @@ export const SettingProvider: React.FC<Props> = ({ children }) => {
       accountNumber: "",
       accountName: "",
       bankName: "",
+      routing: "",
+      address: "",
     },
     cryptoInfo: [
       {
@@ -54,6 +61,9 @@ export const SettingProvider: React.FC<Props> = ({ children }) => {
     mail: {
       name: "",
       password: "",
+    },
+    cashApp: {
+      tag: "",
     },
   });
 

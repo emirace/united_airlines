@@ -10,6 +10,8 @@ const BankingInfo = () => {
     accountName: settings.bankingInfo.accountName || "",
     accountNumber: settings.bankingInfo.accountNumber || "",
     bankName: settings.bankingInfo.bankName || "",
+    routing: settings.bankingInfo.routing || "",
+    address: settings.bankingInfo.address || "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -106,6 +108,28 @@ const BankingInfo = () => {
             type="text"
             name="accountName"
             value={formData.accountName}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-600">Routing</label>
+          <input
+            type="text"
+            name="routing"
+            value={formData.routing}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-600">Enter Address</label>
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
           />

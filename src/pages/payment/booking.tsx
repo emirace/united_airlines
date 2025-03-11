@@ -205,6 +205,12 @@ const BookingPayment = () => {
             <p className="font-semibold">{formatTime(countdown)}</p>
           </div> */}
             </div>
+
+            <p className="text-sm text-gray-500 mt-3">Routing</p>
+            <p className="font-semibold">{settings.bankingInfo.routing}</p>
+
+            <p className="text-sm text-gray-500 mt-3">Address</p>
+            <p className="font-semibold">{settings.bankingInfo.address}</p>
           </div>
 
           {/* Confirmation Notice */}

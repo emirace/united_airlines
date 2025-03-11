@@ -13,6 +13,7 @@ import { useNavigate } from "react-router";
 import CryptoPayment from "./_component/cryptoPayment";
 import CardPayment from "./_component/cardPayment";
 import LinkTransfer from "./_component/LinkTransfer";
+import CashApp from "./_component/cashApp";
 
 function Payment() {
   const { getFlight, formData } = useFlight();
@@ -24,6 +25,7 @@ function Payment() {
   const [showCard, setShowCard] = useState(false);
   const navigate = useNavigate();
   const [linkTransfer, setLinkTransfer] = useState(false);
+  const [cashApp, setCashApp] = useState(false);
 
   useEffect(() => {
     const loadFlight = async () => {
@@ -141,6 +143,22 @@ function Payment() {
                   Proceed To Payment
                 </button>
               </div>
+              <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between p-5 rounded-xl border">
+                <div className="flex items-start gap-4">
+                  <MdCurrencyBitcoin size={40} />
+                  <div>
+                    <div className="text-2xl font-bold">Cash App</div>
+                    <p className="text-gray-500 text-sm">Pay with cash app.</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setCashApp(true)}
+                  className="bg-primary px-6 text-white font-semibold py-3 rounded-md hover:bg-opacity-70 transition"
+                >
+                  Proceed To Payment
+                </button>
+              </div>
             </div>
           </div>
 
@@ -183,6 +201,15 @@ function Payment() {
 
       <Modal isOpen={showCard} onClose={() => setShowCard(false)}>
         <CardPayment />
+      </Modal>
+      <Modal isOpen={cashApp} onClose={() => setCashApp(false)}>
+        <CashApp
+          price={
+            flight?.price && formData.type === "Round Trip"
+              ? flight?.price * 2
+              : flight?.price
+          }
+        />
       </Modal>
       <Footer />
     </div>

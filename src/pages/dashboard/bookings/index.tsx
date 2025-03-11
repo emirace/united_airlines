@@ -10,11 +10,14 @@ import { useToastNotification } from "../../../context/toastNotification";
 import moment from "moment";
 import Loading from "../../_components/loading";
 import { HiOutlineClock } from "react-icons/hi2";
+import Modal from "../../_components/modal";
+import BookingDetails from "../payments/_component/bookingDetail";
 
 const Booking = () => {
   const { fetchUserBookings, bookings, loading } = useBooking();
   const { addNotification } = useToastNotification();
   const [activeTab, setActiveTab] = useState("pending");
+  const [isOpen, setIsOpen] = useState(false);
 
   const tabItems = [
     {
@@ -95,7 +98,10 @@ const Booking = () => {
                     </p>
                   </div>
                 </div>
-                <button className="md:ml-auto px-4 py-2 text-primary bg-primary/10 rounded-md">
+                <button
+                  onClick={() => setIsOpen(true)}
+                  className="md:ml-auto px-4 py-2 text-primary bg-primary/10 rounded-md"
+                >
                   Manage Booking
                 </button>
               </div>
@@ -122,6 +128,10 @@ const Booking = () => {
                   <p className="font-semibold">{booking.userId.fullName}</p>
                 </div>
               </div>
+
+              <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+                <BookingDetails booking={booking!} />
+              </Modal>
             </div>
           ))
         ) : (
