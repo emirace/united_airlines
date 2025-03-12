@@ -32,8 +32,9 @@ const BookingConfirmation = () => {
       if (paymentId) {
         const res = await getPaymentById(paymentId);
         setPayment(res);
-        setStatus(payment?.status || "pending");
-        if (payment?.status !== "pending") {
+        setStatus(res?.status || "pending");
+        console.log(res);
+        if (res?.status !== "pending") {
           setConfirming(false);
         } else {
           setConfirming(true);
@@ -106,7 +107,7 @@ const BookingConfirmation = () => {
                     <span>Booked by:</span>
                   </div>
                   <span className="font-semibold">
-                    {payment?.bookingId?.userId?.fullName}
+                    {payment?.userId?.fullName || payment?.userId.email}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">

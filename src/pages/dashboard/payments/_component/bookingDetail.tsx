@@ -9,7 +9,7 @@ interface BookingDetailsProps {
 const BookingDetails: React.FC<BookingDetailsProps> = ({ booking }) => {
   console.log(booking);
   return (
-    <div className="p-6 border rounded-xl  space-y-6 h-full overflow-y-auto ">
+    <div className="p-6 border rounded-xl  space-y-6 h-[90vh] overflow-y-auto ">
       <h2 className="text-2xl font-bold mb-4">Booking Details</h2>
       <div className="grid grid-cols-2 gap-4 text-gray-700">
         <p>

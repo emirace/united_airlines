@@ -130,6 +130,10 @@ const CashApp: React.FC<{ price?: number }> = ({ price }) => {
           <p className="text-sm text-gray-500">Amount due</p>
           <p className="font-semibold">${price}</p>
         </div>
+        <div className="flex justify-between items-center">
+          <p className="text-sm text-gray-500">Name</p>
+          <p className="font-semibold">${settings.cashApp.name}</p>
+        </div>
 
         {/* Wallet Address */}
         <div className="flex justify-between items-center mt-3">

@@ -28,6 +28,7 @@ export interface ISetting {
   };
   cashApp: {
     tag: string;
+    name: string;
   };
 }
 
@@ -64,6 +65,7 @@ export const SettingProvider: React.FC<Props> = ({ children }) => {
     },
     cashApp: {
       tag: "",
+      name: "",
     },
   });
 

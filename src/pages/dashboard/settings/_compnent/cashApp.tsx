@@ -9,6 +9,7 @@ const CashApp = () => {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
+    name: "",
     tag: "",
   });
 
@@ -39,7 +40,7 @@ const CashApp = () => {
   };
 
   const handleUpdate = async () => {
-    if (!formData.tag) {
+    if (!formData.tag || !formData.name) {
       addNotification({
         message: "All fields are required.",
         error: true,
@@ -65,13 +66,24 @@ const CashApp = () => {
     <div className="border  rounded-lg  w-full ">
       <div className="p-6 border-b">
         <h2 className="text-2xl md:text-4xl font-bold  ">
-          Cash App Notification
+          Cash App Information
         </h2>
         <span className="block text-gray-600">
           Update your cash app information
         </span>
       </div>
       <div className="p-6">
+        <div>
+          <label className="block text-gray-600">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData?.name}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+          />
+        </div>
+
         <div>
           <label className="block text-gray-600">Tag</label>
           <input
