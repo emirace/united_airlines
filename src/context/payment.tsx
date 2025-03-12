@@ -18,6 +18,7 @@ export interface IPayment {
   transactionId: string;
   status: string;
   createdAt: string;
+  image?: string;
 }
 
 interface PaymentContextType {

@@ -4,9 +4,10 @@ import { baseChatURL } from "../../../../services/apiChat";
 
 interface BookingDetailsProps {
   booking?: IBooking;
+  image?: string;
 }
 
-const BookingDetails: React.FC<BookingDetailsProps> = ({ booking }) => {
+const BookingDetails: React.FC<BookingDetailsProps> = ({ booking, image }) => {
   console.log(booking);
   return (
     <div className="p-6 border rounded-xl  space-y-6 h-[90vh] overflow-y-auto ">
@@ -70,6 +71,13 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({ booking }) => {
           ))}
         </ul>
       </div>
+
+      {image && (
+        <div className="p-4 bg-gray-100 rounded-lg">
+          <h3 className="text-lg font-semibold">Payment Receipt</h3>
+          <img src={baseChatURL + image} className="object-contain" />
+        </div>
+      )}
 
       <div className="p-4 bg-gray-100 rounded-lg">
         <h3 className="text-lg font-semibold">Travellers</h3>

@@ -16,6 +16,7 @@ import { useParams } from "react-router";
 import { getPaymentByToken, updatePaymentImage } from "../../services/payment";
 import { compressImageUpload } from "../../utils/image";
 import { baseChatURL } from "../../services/apiChat";
+import { useNavigate } from "react-router";
 
 const BookingPayment = () => {
   const { addNotification } = useToastNotification();
@@ -26,6 +27,7 @@ const BookingPayment = () => {
   const [payment, setPayment] = useState<IPayment | null>(null);
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadSetting = async () => {
@@ -38,11 +40,9 @@ const BookingPayment = () => {
         await fetchSettings();
         const res = await getPaymentByToken(paymentId);
         setPayment(res);
+        setImage(res?.image || "");
       } catch (error: any) {
-        addNotification({
-          message: error || "An error occurred while fetching payment detail.",
-          error: true,
-        });
+        console.log(error);
       } finally {
         setLoading(false);
       }
@@ -80,6 +80,7 @@ const BookingPayment = () => {
         } has uploaded payment receipt`,
         "Uploaded Payment Receipt"
       );
+      navigate("/confirm?paymentId=" + paymentId);
     } catch (error: any) {
       addNotification({
         message: error,
@@ -223,7 +224,7 @@ const BookingPayment = () => {
           {!image ? (
             <label
               htmlFor="img"
-              className="w-full bg-primary text-white py-2 rounded-lg font-semibold flex items-center justify-center"
+              className="w-full bg-primary gap-3 text-white py-2 rounded-lg font-semibold flex items-center justify-center"
             >
               {uploading && <Loading size="sm" color="white" />}
               Upload Receipt
@@ -240,7 +241,7 @@ const BookingPayment = () => {
               <button
                 onClick={handlePayment}
                 disabled={loadingPayment}
-                className="w-full bg-primary text-white py-2 rounded-lg font-semibold flex items-center justify-center"
+                className="w-full bg-primary gap-3 text-white py-2 rounded-lg font-semibold flex items-center justify-center"
               >
                 {loadingPayment && <Loading size="sm" color="white" />}
                 Confirm

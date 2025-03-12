@@ -19,6 +19,7 @@ const AllPayments: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [booking, setBooking] = useState<IBooking | null>(null);
+  const [image, setImage] = useState("");
 
   useEffect(() => {
     const loadPayments = async () => {
@@ -130,6 +131,7 @@ const AllPayments: React.FC = () => {
                       className=" cursor-pointer"
                       onClick={() => {
                         setBooking(payment.bookingId);
+                        setImage(payment.image || "");
                         setIsOpen(true);
                       }}
                     />
@@ -185,7 +187,7 @@ const AllPayments: React.FC = () => {
       </div>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <BookingDetails booking={booking!} />
+        <BookingDetails booking={booking!} image={image} />
       </Modal>
     </div>
   );

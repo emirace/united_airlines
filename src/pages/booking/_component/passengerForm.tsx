@@ -75,7 +75,10 @@ const PassengerForm: React.FC = () => {
     });
   };
 
-  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    e: ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
     try {
       setUploading(true);
 
@@ -84,7 +87,11 @@ const PassengerForm: React.FC = () => {
 
       const imageUrl = await compressImageUpload(file, 1024);
 
-      updateFormData({ image: imageUrl });
+      updateFormData({
+        travellersInfo: formData.travellersInfo.map((passenger) =>
+          passenger.id === id ? { ...passenger, image: imageUrl } : passenger
+        ),
+      });
 
       addNotification({ message: "Image uploaded", error: true });
     } catch (err) {
@@ -269,7 +276,7 @@ const PassengerForm: React.FC = () => {
                     id="image"
                     accept="image/*"
                     className="sr-only"
-                    onChange={handleImageUpload}
+                    onChange={(e) => handleImageUpload(e, passenger.id)}
                   />
                 </label>
                 {uploading && <Loading size="sm" />}
