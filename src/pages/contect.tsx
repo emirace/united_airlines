@@ -5,12 +5,14 @@ import {
   FaInstagram,
   FaTwitter,
   FaLinkedin,
+  FaWhatsapp,
 } from "react-icons/fa";
 import Navbar from "./home/_components/navbar";
 import Footer from "./home/_components/footer";
 import IMAGES from "../assets/images";
 import { useSetting } from "../context/setting";
 import Support from "./_components/support";
+import { Link } from "react-router";
 
 const Contact = () => {
   const { settings } = useSetting();
@@ -177,6 +179,12 @@ const Contact = () => {
           </form>
         </div>
       </section>
+      <Link
+        to={settings.whatsApp}
+        className="fixed bottom-20 right-8 text-center block bg-green-400 rounded-full"
+      >
+        <FaWhatsapp className="inline-block text-4xl text-white m-2" />
+      </Link>
       <Support />
 
       <Footer />

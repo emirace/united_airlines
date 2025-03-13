@@ -30,6 +30,7 @@ export interface ISetting {
     tag: string;
     name: string;
   };
+  whatsApp: string;
 }
 
 interface SettingContextProps {
@@ -67,6 +68,7 @@ export const SettingProvider: React.FC<Props> = ({ children }) => {
       tag: "",
       name: "",
     },
+    whatsApp: "",
   });
 
   const fetchSettings = async () => {

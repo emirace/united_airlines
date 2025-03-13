@@ -2,6 +2,7 @@ import BankingInfo from "./_compnent/bankingInfo";
 import CashApp from "./_compnent/cashApp";
 import CryptoInfo from "./_compnent/cryptoInfo";
 import Email from "./_compnent/email";
+import WhatsAppLink from "./_compnent/whatsApp";
 
 function Settings() {
   return (
@@ -10,6 +11,7 @@ function Settings() {
       <CryptoInfo />
       <CashApp />
       <Email />
+      <WhatsAppLink />
     </div>
   );
 }
